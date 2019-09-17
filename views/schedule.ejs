@@ -1,0 +1,552 @@
+
+<% include ./partials/header %>
+
+<div class="content">
+  <div class="calendar-container">
+    <div class="calendar"> 
+      <div class="year-header"> 
+        <span class="left-button" id="prev"> &lang; </span> 
+        <span class="year" id="label"></span> 
+        <span class="right-button" id="next"> &rang; </span>
+      </div> 
+      <table class="months-table"> 
+        <tbody>
+          <tr class="months-row">
+            <td class="month">Jan</td> 
+            <td class="month">Feb</td> 
+            <td class="month">Mar</td> 
+            <td class="month">Apr</td> 
+            <td class="month">May</td> 
+            <td class="month">Jun</td> 
+            <td class="month">Jul</td>
+            <td class="month">Aug</td> 
+            <td class="month">Sep</td> 
+            <td class="month">Oct</td>          
+            <td class="month">Nov</td>
+            <td class="month">Dec</td>
+          </tr>
+        </tbody>
+      </table> 
+      
+      <table class="days-table"> 
+        <td class="day">Sun</td> 
+        <td class="day">Mon</td> 
+        <td class="day">Tue</td> 
+        <td class="day">Wed</td> 
+        <td class="day">Thu</td> 
+        <td class="day">Fri</td> 
+        <td class="day">Sat</td>
+      </table> 
+      <div class="frame"> 
+        <table id="dates-table" class="dates-table"> 
+            <tbody class="tbody">             
+            </tbody> 
+        </table>
+      </div> 
+      <button class="button" id="add-schedule">Schedule Patient</button>
+      <button class="button" id="add-button">Register And Schedule Patient</button>
+    </div>
+  </div>
+  <div class="events-container" style="padding-left: 0">
+    <div class="container my-container">
+      
+    </div>
+  </div>  
+  <!-- Dialog     -->
+  <div class="dialog" id="dialog"> 
+      <h2 class="dialog-header"> Register Patient </h2>
+      <div class="container">
+        <form id="form">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" class="form-control form-control-sm" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label for="gender">Sex: &nbsp; &nbsp; &nbsp;</label>
+                <input type="radio" name="gender" value="male"> Male
+                <input type="radio" name="gender" value="female"> Female
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <textarea type="text" id="address" class="form-control form-control-sm" placeholder="Enter address"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="contact_number">Contact number</label>
+              <input type="text" id="contact_number" class="form-control form-control-sm" placeholder="Enter contact number">
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input type="text" id="age" class="form-control form-control-sm" placeholder="Enter contact number">
+            </div>
+            <div class="form-group">
+              <label for="nationality">Nationality</label>
+              <input type="text" id="nationality" class="form-control form-control-sm" placeholder="Enter nationality">
+            </div>
+            
+            <div class="form-group">
+              <label for="occupation">Occupation</label>
+              <input type="text" id="occupation" class="form-control form-control-sm" placeholder="Enter occupation">
+            </div>
+            <div class="form-group">
+              <label for="referred_by">Reffered By:</label>
+              <input type="text" id="referred_by" class="form-control form-control-sm" placeholder="">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="chief_complainant">Chief Complainant</label>
+              <input type="text" id="chief_complainant" class="form-control form-control-sm" placeholder="">
+            </div>
+            <div class="form-group">
+              <label for="diagnosis">Diagnosis</label>
+              <textarea type="text" id="diagnosis" class="form-control form-control-sm" placeholder="Enter address"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <table class="table table-sm  table-striped">
+              <thead>
+                  <tr>
+                      <th>Legend</th>
+                      <th>Description</th>
+                      <th>Legend</th>
+                      <th>Description</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <th>C</th>
+                      <td>Carious</td>
+                      <td><strong>Comp</strong></td>
+                      <td>Composite</td>
+                  </tr>
+                  <tr>
+                      <th>X</th>
+                      <td>Indicated for extraction</td>
+                      <td><strong>Ab</strong></td>
+                      <td>Abutment</td>
+                  </tr>
+                  <tr>
+                      <th>M</th>
+                      <td>Missing</td>
+                      <td><strong>PJC</strong></td>
+                      <td>Plastci/Porcelain Jacket</td>
+                  </tr>
+                  <tr>
+                      <th>Am</th>
+                      <td>Amalgam</td>
+                      <td><strong>FB</strong></td>
+                      <td>Fixed Bridge</td>
+                  </tr>
+                  <tr>
+                      <th>RF</th>
+                      <td>Root Fragment</td>
+                      <td><strong>P</strong></td>
+                      <td>Pantic</td>
+                  </tr>
+                  <tr> 
+                      <th>RC</th>
+                      <td>Root Canal</td>
+                      <td></td>
+                      <td></td>
+                  </tr>
+                </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 mt-5">
+            <!-- put svg here -->
+
+          </div>
+          <div class="col-lg-6">
+            <table class="table table-sm  table-striped">
+              <thead>
+                  <tr>
+                      <th>Tooth Number</th>
+                      <th>Comment</th>
+                      <th>Tooth Number</th>
+                      <th>Comment</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="t-11">11</td>
+                  <td class="t-11"><input type="text" id="t-11" name="t-11" class="form-control form-control-sm"></td>
+                  <td class="t-21">21</td>
+                  <td class="t-21"><input type="text" id="t-21" name="t-21" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-12">12</td>
+                  <td class="t-12"><input type="text" id="t-12" name="t-12" class="form-control form-control-sm"></td>
+                  <td class="t-22">22</td>
+                  <td class="t-22"><input type="text" id="t-22" name="t-22" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-13">13</td>
+                  <td class="t-13"><input type="text" id="t-13" name="t-13" class="form-control form-control-sm"></td>
+                  <td class="t-23">23</td>
+                  <td class="t-23"><input type="text" id="t-23" name="t-23" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-14">14</td>
+                  <td class="t-14"><input type="text" id="t-14" name="t-14" class="form-control form-control-sm"></td>
+                  <td class="t-24">24</td>
+                  <td class="t-24"><input type="text" id="t-24" name="t-24" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-15">15</td>
+                  <td class="t-15"><input type="text" id="t-15" name="t-15" class="form-control form-control-sm"></td>
+                  <td class="t-25">25</td>
+                  <td class="t-25"><input type="text" id="t-25" name="t-25" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-16">16</td>
+                  <td class="t-16"><input type="text" id="t-16" name="t-16" class="form-control form-control-sm"></td>
+                  <td class="t-26">26</td>
+                  <td class="t-26"><input type="text" id="t-26" name="t-26" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-17">17</td>
+                  <td class="t-17"><input type="text" id="t-17" name="t-17" class="form-control form-control-sm"></td>
+                  <td class="t-27">27</td>
+                  <td class="t-27"><input type="text" id="t-27" name="t-27" class="form-control form-control-sm"></td>
+                </tr>
+              
+            
+              <tr>
+                  <td class="t-18">18</td>
+                  <td class="t-18"><input type="text" id="t-18" name="t-18" class="form-control form-control-sm"></td>
+                  <td class="t-28">28</td>
+                  <td class="t-28"><input type="text" id="t-28" name="t-28" class="form-control form-control-sm"></td>
+                </tr>
+
+                <tr>
+                  <td class="t-48">48</td>
+                    <td class="t-48"><input type="text" id="t-48" name="t-48" class="form-control form-control-sm"></td>
+                    <td class="t-38">38</td>
+                    <td class="t-38"><input type="text" id="t-38" name="t-38" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-47">47</td>
+                    <td class="t-47"><input type="text" id="t-47" name="t-47" class="form-control form-control-sm"></td>
+                    <td class="t-37">37</td>
+                    <td class="t-37"><input type="text" id="t-37" name="t-37" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-46">46</td>
+                    <td class="t-46"><input type="text" id="t-46" name="t-46" class="form-control form-control-sm"></td>
+                    <td class="t-36">36</td>
+                    <td class="t-36"><input type="text" id="t-36" name="t-36" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-45">45</td>
+                    <td class="t-45"><input type="text" id="t-45" name="t-45" class="form-control form-control-sm"></td>
+                    <td class="t-35">35</td>
+                    <td class="t-35"><input type="text" id="t-35" name="t-35" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-44">44</td>
+                    <td class="t-44"><input type="text" id="t-44" name="t-44" class="form-control form-control-sm"></td>
+                    <td class="t-34">34</td>
+                    <td class="t-34"><input type="text" id="t-34" name="t-34" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-43">43</td>
+                    <td class="t-43"><input type="text" id="t-43" name="t-43" class="form-control form-control-sm"></td>
+                    <td class="t-33">33</td>
+                    <td class="t-33"><input type="text" id="t-33" name="t-33" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-42">42</td>
+                    <td class="t-42"><input type="text" id="t-42" name="t-42" class="form-control form-control-sm"></td>
+                    <td class="t-32">32</td>
+                    <td class="t-32"><input type="text" id="t-32" name="t-32" class="form-control form-control-sm"></td>
+                  </tr>
+                
+               
+                <tr>
+                  <td class="t-41">41</td>
+                    <td class="t-41"><input type="text" id="t-41" name="t-41" class="form-control form-control-sm"></td>
+                    <td class="t-31">31</td>
+                    <td class="t-31"><input type="text" id="t-31" name="t-31" class="form-control form-control-sm"></td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6">
+            <table class="table table-sm  table-striped">
+              <thead>
+                  <tr>
+                      <th>Medical History</th>
+                      <th>Yes</th>
+                      <th>No</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Hypertension:</td>
+                      <td><input type="radio" name="hypertension" value="yes"> Yes</td>
+                      <td><input type="radio" name="hypertension" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Epilepsy:</td>
+                      <td><input type="radio" name="epilepsy" value="yes"> Yes</td>
+                      <td><input type="radio" name="epilepsy" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Diabetes:</td>
+                      <td><input type="radio" name="diabetes" value="yes"> Yes</td>
+                      <td><input type="radio" name="diabetes" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Kidney Disease:</td>
+                      <td><input type="radio" name="kidney_disease" value="yes"> Yes</td>
+                      <td><input type="radio" name="kidney_disease" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Heart Disease:</td>
+                      <td><input type="radio" name="heart_disease" value="yes"> Yes</td>
+                      <td><input type="radio" name="heart_disease" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Liver Disease:</td>
+                      <td><input type="radio" name="liver_disease" value="yes"> Yes</td>
+                      <td><input type="radio" name="liver_disease" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Allergy:</td>
+                      <td><input type="radio" name="allergy" value="yes"> Yes</td>
+                      <td><input type="radio" name="allergy" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Asthma:</td>
+                      <td><input type="radio" name="asthma" value="yes"> Yes</td>
+                      <td><input type="radio" name="asthma" value="no"> No</td>
+                  </tr>
+                
+               
+                <tr>
+                      <td>Others:</td>
+                      <td><input type="radio" name="others" value="yes"> Yes</td>
+                      <td><input type="radio" name="others" value="no"> No</td>
+                  </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-lg-6">
+
+            <div class="form-group">
+              <label for="treatment_planning">Treatment Planning</label>
+              <textarea type="text" rows="12" name="treatment_planning" id="treatment_planning" class="form-control form-control-sm" placeholder=""></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+              <table class="table table-sm  table-striped">
+              <thead>
+                  <tr>
+                      <th>Oral Conditions</th>
+                      <th colspan="3">Specify</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Deposits/Stains:</td>
+                  <td><input type="radio" name="deposit_stains" value="mild"> Mild</td>
+                  <td><input type="radio" name="deposit_stains" value="moderate"> Moderate</td>
+                  <td><input type="radio" name="deposit_stains" value="severe"> Severe</td>
+                </tr>
+                
+                
+                <tr>
+                  <td>Oral/Hygiene:</td>
+                  <td><input type="radio" name="oral_hygiene" value="good"> Good</td>
+                  <td><input type="radio" name="oral_hygiene" value="fair"> Fair</td>
+                  <td><input type="radio" name="oral_hygiene" value="poor"> Poor</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="form-group">
+                <label for="treatment_planning">Time: </label>
+                <select id="ampm" name="ampm" class="form-control form-control-sm">
+                  <option value="7-00-AM">7:00 AM</option>
+                  <option value="7-15-AM">7:15 AM</option>
+                  <option value="7-30-AM">7:30 AM</option>
+                  <option value="7-45-AM">7:45 AM</option>
+                  <option value="8-00-AM">8:00 AM</option>
+                  <option value="8-15-AM">8:15 AM</option>
+                  <option value="8-30-AM">8:30 AM</option>
+                  <option value="8-45-AM">8:45 AM</option>
+                  <option value="9-00-AM">9:00 AM</option>
+                  <option value="9-15-AM">9:15 AM</option>
+                  <option value="9-30-AM">9:30 AM</option>
+                  <option value="9-45-AM">9:45 AM</option>
+                  <option value="10-00-AM">10:00 AM</option>
+                  <option value="10-15-AM">10:15 AM</option>
+                  <option value="10-30-AM">10:30 AM</option>
+                  <option value="10-45-AM">10:45 AM</option>
+                  <option value="11-00-AM">11:00 AM</option>
+                  <option value="11-15-AM">11:15 AM</option>
+                  <option value="11-30-AM">11:30 AM</option>
+                  <option value="11-45-AM">11:45 AM</option>
+                  <option value="12-00-AM">12:00 PM</option>
+                  <option value="12-15-AM">12:15 PM</option>
+                  <option value="12-45-AM">12:45 PM</option>
+                  <option value="1-00-PM">1:00 PM</option>
+                  <option value="1-15-PM">1:15 PM</option>
+                  <option value="1-30-PM">1:30 PM</option>
+                  <option value="1-45-PM">1:45 PM</option>
+                  <option value="2-00-PM">2:00 PM</option>
+                  <option value="2-15-PM">2:15 PM</option>
+                  <option value="2-30-PM">2:30 PM</option>
+                  <option value="2-45-PM">2:45 PM</option>
+                  <option value="3-00-PM">3:00 PM</option>
+                  <option value="3-15-PM">3:15 PM</option>
+                  <option value="3-30-PM">3:30 PM</option>
+                  <option value="3-45-PM">3:45 PM</option>
+                  <option value="4-00-PM">4:00 PM</option>
+                  <option value="4-15-PM">4:15 PM</option>
+                  <option value="4-30-PM">4:30 PM</option>
+                  <option value="4-45-PM">4:45 PM</option>
+                  <option value="5-00-PM">5:00 PM</option>
+                  <option value="5-15-PM">5:15 PM</option>
+                  <option value="5-30-PM">5:30 PM</option>
+                  <option value="5-45-PM">5:45 PM</option>
+                  <option value="6-00-PM">6:00 PM</option>
+                  <option value="6-15-PM">6:15 PM</option>
+                  <option value="6-30-PM">6:30 PM</option>
+                  <option value="6-45-PM">6:45 PM</option>
+                  <option value="7-00-PM">7:00 PM</option>
+                  <option value="7-15-PM">7:15 PM</option>
+                  <option value="7-30-PM">7:30 PM</option>
+                  <option value="7-45-PM">7:45 PM</option>
+                  <option value="8-00-PM">8:00 PM</option>
+                  <option value="8-15-PM">8:15 PM</option>
+                  <option value="8-30-PM">8:30 PM</option>
+                  <option value="8-45-PM">8:45 PM</option>
+                  <option value="9-00-PM">9:00 PM</option>
+                </select>
+              </div>
+          </div>
+          <div class="col-lg-4">
+              <div class="form-group">
+              <label for="treatment_planning">Time: </label>
+              <select id="service" name="service" class="form-control form-control-sm">
+                <option value="bunot_regular">Bunot(Regular) &#8369;500</option>
+                <option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>
+                <option value="pasta">Pasta(Restoration) &#8369;800</option>
+                <option value="pasta">Linis(Oral Propelaxis) &#8369;800</option>
+                <option value="brace">Brace(Taas Baba) &#8369;45000</option>
+                <option value="brace_adjustment">Brace Adjustment &#8369;1000</option>
+                <option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>
+                <option value="denture_all">Denture(Taas Baba) &#8369;10000</option>
+                <option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>
+                <option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>
+                <option value="denture_simple">Retainer(Simple "3 teeth") &#8369;3500</option>
+              </select>
+              </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+            <label for="treatment_planning">Time: </label>
+            <select id="service2" name="service2" class="form-control form-control-sm">
+              <option value="bunot_regular">Bunot(Regular) &#8369;500</option>
+              <option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>
+              <option value="pasta">Pasta(Restoration) &#8369;800</option>
+              <option value="pasta">Linis(Oral Propelaxis) &#8369;800</option>
+              <option value="brace">Brace(Taas Baba) &#8369;45000</option>
+              <option value="brace_adjustment">Brace Adjustment &#8369;1000</option>
+              <option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>
+              <option value="denture_all">Denture(Taas Baba) &#8369;10000</option>
+              <option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>
+              <option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>
+              <option value="denture_simple">Retainer(Simple "3 teeth") &#8369;3500</option>
+            </select>
+            </div>
+        </div>
+        </div>
+        </div>
+        
+        <div class="container">
+          <div class="row mb-5">
+            <div class="col-lg-2"></div>
+            <div class="col-lg-8 d-flex flex-row justify-content-around row-hl">
+              <input type="button" value="Cancel" id="cancel-button" class="button item-hl">
+              <input type="button" value="OK" id="ok-button" class="button item-hl">
+            </div>
+            <div class="col-lg-2"></div>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div> 
+    <!-- End of dialog --> s
+
+    <!-- Dialog 2 -->
+    <div class="dialog-2" id="dialog-2"> 
+      <h2 class="dialog-header"> Add Schedule </h2>
+      <div class="patients-container" style="padding-left: 0">
+        <div class="container my-container">
+          
+        </div>
+      </div>
+    </div>
+    <!-- End of Dialog 2 -->
+</div>
+<!-- content Box-->
+
+<% include ./partials/footer %>
