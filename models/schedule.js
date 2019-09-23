@@ -6,7 +6,7 @@ const ScheduleSchema = mongoose.Schema({
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patient'
-    },
+    }, 
     // month: {
     //   type: String,
     // },
@@ -58,8 +58,8 @@ const ScheduleSchema = mongoose.Schema({
       type: Number
     },
     resched: {
-      last_time: {
-        type: String
+      last_time: { 
+        type: String 
       },
       is_resched: {
         type: Boolean,
@@ -69,6 +69,10 @@ const ScheduleSchema = mongoose.Schema({
     cancelled: {
       type: Boolean,
       default: false
+    },
+    paid: {
+      type: Boolean,
+       default: false
     },
     done: {
       type: Boolean,

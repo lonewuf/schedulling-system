@@ -7,7 +7,7 @@ const Teeth = require('../models/teeth')
 
 router.get('/', (req, res) => {
   res.render('schedule')
-})
+}) 
 
 router.get('/initial-load', (req, res) => {
   const date = new Date();
@@ -15,7 +15,7 @@ router.get('/initial-load', (req, res) => {
   const month = date.getMonth() + 1;
   var allData = {}
 
-  Schedule.find({})
+  Schedule.find({done: false})
     .populate('patient')
     .then(scheduleData => {
       Patient.find({})
@@ -30,9 +30,8 @@ router.get('/initial-load', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.post('/add-schedule', (req, res) => {
+router.post('/add-schedule-with-patient', (req, res) => {
   const data = req.body
-  console.log(data, "sadasd")
 
   // Craete teeth document in database
   Teeth.create({
@@ -70,6 +69,10 @@ router.post('/add-schedule', (req, res) => {
     t_48: data.t_48,
   }, (err, createdTeeth) => {
     // Create patient document in database
+    if(err) {
+      throw (err)
+    }
+
     Patient.create({
       // User details
       name: data.name,
@@ -101,7 +104,10 @@ router.post('/add-schedule', (req, res) => {
       treatment_planning: data.treatment_planning,
 
       // Teeth
-      teeth: createdTeeth._id
+      teeth: createdTeeth._id,
+
+      // Schedule patient
+      is_scheduled: true
     },
     (err, createdPatient) => {
       if(err) {
@@ -123,14 +129,18 @@ router.post('/add-schedule', (req, res) => {
             if(err) {
               throw (err)
             } else {
-              console.log(createdSchedule)
+              createdPatient.schedules.push(createdSchedule._id)
+              createdPatient.save()
+                .then(updatedPatient => {
+                })
+                .catch(err => console.log(err))
             }
           }
         )
 
       }
-    }
-  )
+    } 
+  )  
 
   })
 
@@ -139,12 +149,65 @@ router.post('/add-schedule', (req, res) => {
   // console.log(data);
 })
 
+router.post('/add-schedule', (req, res) => {
+  const data = req.body
+
+  Schedule.create(
+    {
+      patient: data.patientID,
+      month: data.month,
+      year: data.year,
+      day: data.day,
+      ampm: data.ampm,
+      serviceSimple: data.serviceSimple
+    },
+    (err, createdSchedule) => {
+      if(err) {
+        throw (err)
+      } else {
+        Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: true}})
+          .then(scheduledPatient => {
+            console.log(scheduledPatient)
+          })
+          .catch(err => console.log(err))
+      }
+    }
+  )
+
+})
+
+router.post('/edit-schedule', (req, res) => {
+  const data = req.body
+  console.log(data)
+  Schedule.updateOne({_id: data.schedID}, 
+      {
+        month: data.month,
+        day: data.day,
+        ampm: data.ampm,
+        serviceSimple: data.serviceSimple
+      },
+    )
+    .then(updatedSchedule => {
+      console.log(updatedSchedule)
+    })
+    .catch(err => console.log(err))
+})
+
 router.post('/cancel-schedule', (req, res) => {
   const data = req.body;
+  console.log(data)
 
   Schedule.updateOne({_id: data.id}, {$set: {cancelled: true}})
     .then(updatedSchedule => {
-      res.send(updatedSchedule)
+      Schedule.findById(data.id)
+        .then(foundSched => {
+          Patient.updateOne({_id: foundSched.patient}, {$set: {is_scheduled: false}})
+          .then(updatedPatient => {
+            res.send(updatedSchedule)
+          })
+          .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
     })
     .catch(err => console.log(err))
 })

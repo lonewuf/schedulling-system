@@ -43,7 +43,7 @@ body {
 .events-container:after{
   clear:both;
 }
-.patients-container {
+/* .patients-container {
   overflow-y: scroll;
   height: 100%;
   float: right;
@@ -57,7 +57,7 @@ body {
 }
 .patients-container:after{
   clear:both;
-}
+} */
 .event-card {
   padding: 20px 0;
   width: 350px;
@@ -303,7 +303,7 @@ body {
 .dialog-2{
   z-index: 5;
   overflow-y: scroll;
-  background: #000;
+  background: rgb(255, 255, 255);
   position:absolute;
   width: 67.5%;
   /* width:415px; */

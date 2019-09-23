@@ -10,7 +10,7 @@ const PatientSchema = mongoose.Schema({
     age: {
       type: String,
     },
-    sex: {
+    gender: {
       type: String,
     },
     nationality: {
@@ -23,14 +23,14 @@ const PatientSchema = mongoose.Schema({
         type: String,
         // required: true
     }, 
-    chief_compliant: {
+    chief_complainant: {
       type: String
     },
     reffered_by: {
       type: String
     },
     diagnosis: {
-      type: String
+      type: String 
     },
     address: {
       type: String
@@ -38,6 +38,9 @@ const PatientSchema = mongoose.Schema({
     company: {
       type: String
     },
+    schedules: [
+
+    ],
     service: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -112,6 +115,12 @@ const PatientSchema = mongoose.Schema({
     },
     treatment_planning: {
       type: String
+    },
+
+    // Schedule
+    is_scheduled: {
+      type: Boolean,
+      default: false
     }
     
 });
