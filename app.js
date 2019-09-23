@@ -96,10 +96,12 @@ app.use((req, res, next) => {
 // Imported routes
 const scheduleRoutes = require('./routes/schedule')
 const patientRoutes = require('./routes/patient')
+const userRoutes = require('./routes/user')
 
 // Include routes in server
 app.use('/schedule', scheduleRoutes);
 app.use('/patient', patientRoutes);
+app.use('/', userRoutes)
 
 // Server Host
 const server_host = process.env.YOUR_HOST || '0.0.0.0';
