@@ -4,7 +4,7 @@ body {
   width: 100%;
   margin: 0;
   background: #005C97;    
-  background: -webkit-linear-gradient(left, #e4e4e7, rgb(216, 230, 238));
+  background: -webkit-linear-gradient(left, #f7f7ff, rgb(255, 255, 255));
   /* background: -moz-linear-gradient(left, #363795, #005C97);
   background: -o-linear-gradient(left, #363795, #005C97);
   background: linear-gradient(to right, #363795, #005C97);  */
@@ -14,7 +14,7 @@ body {
   overflow: none;
   max-width: 1200px;
   padding: 0px 0;
-  height: 500px;
+  height: 550px;
   position: relative;
   margin: 20px auto;
   background: #52A0FD;
@@ -93,7 +93,7 @@ body {
   float: left;
   position: relative;
   margin: 0px auto; 
-  width: 32.5%;
+  width: 33.5%;
   height: 100%;
   background: #fff;
   font: 13px Helvetica, Arial, san-serif; 

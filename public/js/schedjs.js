@@ -3,7 +3,8 @@ const host = 'http://localhost:3000';
 
 var schedule_data = {
   "schedules": [], 
-  "patients": []
+  "patients": [],
+  "services": []
 };
 
 var allPatients = []
@@ -69,6 +70,7 @@ function init_events() {
         //   schedule_data["patients"].push(oneData)
         // })
         schedule_data["patients"] = data.patientData
+        schedule_data["services"] = data.serviceData
         allPatients = schedule_data["patients"];
     },
     error: function (error) {
@@ -985,31 +987,41 @@ function appendScheduleFormsWithVal(event) {
 
   // Appending all option tag for service
   select2.append(`<option value="none">Select Service</option>`)
-        .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-        .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-        .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-        .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-        .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-        .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-        .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-        .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-        .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-        .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-        .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
+  schedule_data["services"].forEach(service => {
+    select2.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+
+  // select2.append(`<option value="none">Select Service</option>`)
+  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
+  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
+  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
+  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
+  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
+  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
+  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
+  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
+  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
+  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
+  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   // Appending all option tag for service2
+
   select3.append(`<option value="none">Select Service</option>`)
-        .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-        .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-        .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-        .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-        .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-        .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-        .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-        .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-        .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-        .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-        .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
+  schedule_data["services"].forEach(service => {
+    select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+  // select3.append(`<option value="none">Select Service</option>`)
+  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
+  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
+  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
+  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
+  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
+  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
+  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
+  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
+  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
+  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
+  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   // Append month
   select4.append('<option value="1">January</option>')
@@ -1137,31 +1149,39 @@ function appendScheduleForms() {
 
   // Appending all option tag for service
   select2.append(`<option value="none">Select Service</option>`)
-        .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-        .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-        .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-        .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-        .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-        .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-        .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-        .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-        .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-        .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-        .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
+  schedule_data["services"].forEach(service => {
+    select2.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+  // select2.append(`<option value="none">Select Service</option>`)
+  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
+  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
+  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
+  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
+  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
+  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
+  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
+  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
+  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
+  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
+  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   // Appending all option tag for service2
   select3.append(`<option value="none">Select Service</option>`)
-        .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-        .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-        .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-        .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-        .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-        .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-        .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-        .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-        .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-        .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-        .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
+  schedule_data["services"].forEach(service => {
+    select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+  // select3.append(`<option value="none">Select Service</option>`)
+  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
+  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
+  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
+  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
+  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
+  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
+  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
+  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
+  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
+  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
+  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   form1.append(label1).append(select1)
   form2.append(label2).append(select2)

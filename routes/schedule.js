@@ -4,6 +4,7 @@ const router = require('express').Router();
 const Patient = require('../models/patient')
 const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
+const Service = require('../models/service')
 
 router.get('/', (req, res) => {
   res.render('schedule')
@@ -21,9 +22,15 @@ router.get('/initial-load', (req, res) => {
       Patient.find({})
         .populate('teeth')
         .then(patientData => {
-          allData.scheduleData = scheduleData;
-          allData.patientData = patientData;
-          res.send(allData);
+          Service.find({})
+            .then(serviceData => {
+              allData.scheduleData = scheduleData;
+              allData.patientData = patientData;
+              allData.serviceData = serviceData;
+              console.log(allData.serviceData)
+              res.send(allData);
+            })
+            .catch(err => console.log(err))
         })
       
     })

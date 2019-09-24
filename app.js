@@ -15,7 +15,7 @@ const auth = require('./config/auth');
 
 // Setup Database
 const myDb = require('./config/database');
-mongoose.connect(myDb.daatabaseProd, { useNewUrlParser: true,  useUnifiedTopology: true});
+mongoose.connect(myDb.databaseDev, { useNewUrlParser: true,  useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'Connection error: '))
   .once('open', () => console.log('Connected to MongoDB'))
@@ -97,10 +97,14 @@ app.use((req, res, next) => {
 const scheduleRoutes = require('./routes/schedule')
 const patientRoutes = require('./routes/patient')
 const userRoutes = require('./routes/user')
+const serviceRoutes = require('./routes/service')
+const inventoryRoutes = require('./routes/inventory')
 
 // Include routes in server
 app.use('/schedule', scheduleRoutes);
 app.use('/patient', patientRoutes);
+app.use('/services', serviceRoutes);
+app.use('/inventory', inventoryRoutes);
 app.use('/', userRoutes)
 
 // Server Host
