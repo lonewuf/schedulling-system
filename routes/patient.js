@@ -4,6 +4,15 @@ const router = require('express').Router();
 const Patient = require('../models/patient')
 const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
+const Payment = require('../models/payment')
+
+router.get('/', (req, res) => {
+  Patient.find({})
+    .then(patients => {
+      res.render('patients', {patients})
+    })
+    .catch(err => console.log(err))
+})
 
 router.post('/add-patient', (req, res) => {
   const data = req.body
@@ -181,6 +190,21 @@ router.post('/update-patient', (req, res) => {
     .catch(err => console.log(err))
 })
 
+router.get('/search/:id', (req, res) => {
+  const id = req.params.id
+
+  Patient.findById(id)
+    .populate('teeth')
+    .then(patient => {
+      Payment.find({patient: id})
+        .populate('service')
+        .then(paymentList => {
+          console.log(paymentList[0].service)
+          res.render('patient', {patient, paymentList})
+        })
+    })
+    .catch(err => console.log(err))
+})
 
 
 module.exports = router;

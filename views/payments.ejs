@@ -1,0 +1,35 @@
+<% include ./partials/header %>
+ 
+  <% var counter = 0 %>
+  <% const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];  %>
+  <% if(payments.length > 0) { %> 
+    <h5 class="display-5 text-center mt-3">List of Payments</h5>
+    <table class="table table-striped table-hover mt-2">
+      <thead>
+        <tr>
+            <th>#</th> 
+            <th>Patient Name</th>
+            <th>Date</th>
+            <th>Total Payment</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+      <% payments.forEach(payment => { %>
+        <tr>
+            <th><%= (counter+1) %></th>
+            <td><a href="/patient/<%= payment.patient._id %>" class="text-primary"><%= payment.patient.name %></a></td>
+            <td><%= months[payment.month - 1] %> <%= payment.day %> <%= payment.year %></td>
+            <td><a href="/payment/search-by-payment/<%= payment._id %>" class="btn btn-secondary">More Info</a></td>
+            <td>&#8369; <%= payment.grand_total %></td>
+        </tr>
+        <% counter++ %>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <% } else {%>
+    <h4 class="display-1 text-center">No payment listed</h4>
+  <% } %>
+
+<% include ./partials/footer %>

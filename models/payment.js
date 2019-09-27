@@ -3,15 +3,38 @@ const mongoose = require('mongoose');
 // User Schema
 const PaymentSchema = mongoose.Schema({
    
-  schedule: {
+  schedule: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Schedule' 
   },
-  patient: {
+  patient: { 
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Patient'
   },
-  month: {
+  service: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Service'
+    }
+  ],
+  medicine: [ 
+    {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Medicine'
+      },
+      quantity: {
+        type: Number
+      },
+      price: {
+        type: Number
+      },
+      text: {
+        type: String
+      }
+    }
+  ],
+  month: { 
     type: Number,
   },
   day: {

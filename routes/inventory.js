@@ -35,18 +35,18 @@ router.post('/add-product', (req, res) => {
   if(quantity === "") {
     req.flash('danger', 'Quantity is required')
     res.redirect('/inventory');
-  }
-  if(is_med === undefined) {
+  } 
+  if(is_med === undefined || is_med === null || is_med === '') {
     req.flash('danger', 'Please specify if medicine or not')
     res.redirect('/inventory');
-  }
+  } else {
 
   if((r.test(price) && rQuantity.test(quantity)) || price === "") {
     if(rQuantity.test(quantity)) {
       Inventory.create({name, price, quantity, is_med}, (err, createdProduct) => {
         if(err) {
           throw(err)
-        } else {
+        } else { 
           req.flash('success', 'Product is created')
           res.redirect('/inventory');
         }
@@ -60,6 +60,7 @@ router.post('/add-product', (req, res) => {
     console.log('sadasd')
     req.flash('danger', 'Price and Quantity must be numeric')
     res.redirect('/inventory');
+  }
   }
 })
 

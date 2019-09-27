@@ -126,49 +126,60 @@
 //   var medQuantity${i} = $('<input type="text" id="medQuantity${i}" name="medQuantity${i}" class="form-control form-control-sm" placeholder="Enter quantity">')
 //   var medPrice${i} = $('<input type="text" id="medPrice${i}" name="medPrice${i}" class="form-control form-control-sm"  readonly>')
 
-for(let i= 1; i <= 6; i++) {
-  console.log(`
-  $("#med${i}").change(function() {
-    var s = $("#med${i}").val()
-    console.log(s)
-    if(s != 'none') {
-      var selectedMed = schedule_data.inventory.filter(med => med._id == s)
-      selectedMed = selectedMed[0]
-      var q = $("#medQuantity${i}").val()
-      if(q != '') {
-        var price = parseInt(selectedMed.price) * parseInt(q);
-        $("#medPrice${i}").val(price)
-      } else {
-        $("#medPrice${i}").val('')
-      }
-    }
-  })
+// for(let i= 1; i <= 6; i++) {
+//   console.log(`
+//   $("#med${i}").change(function() {
+//     var s = $("#med${i}").val()
+//     console.log(s)
+//     if(s != 'none') {
+//       var selectedMed = schedule_data.inventory.filter(med => med._id == s)
+//       selectedMed = selectedMed[0]
+//       var q = $("#medQuantity${i}").val()
+//       if(q != '') {
+//         var price = parseInt(selectedMed.price) * parseInt(q);
+//         $("#medPrice${i}").val(price)
+//       } else {
+//         $("#medPrice${i}").val('')
+//       }
+//     }
+//   })
   
-  $("#medQuantity${i}").keyup(function () {
-    var q = $("#medQuantity${i}").val()
-    var rN = /[0-9]/
-    console.log(q)
-    console.log(rN.test(q[q.length-1]))
-    if(q != '') {
-      if(rN.test(q[q.length-1])) {
-        q = $("#medQuantity${i}").val()
-        if(q != '') {
-          var s = $("#med${i}").val()
-          if(s != 'none') {
-            var selectedMed = schedule_data.inventory.filter(med => med._id == s)
-            selectedMed = selectedMed[0]
-            var price = parseInt(selectedMed.price) * parseInt(q);
-            $("#medPrice${i}").val(price)
-          }
-        } else {
-          $("#medPrice${i}").val('')
-        }
-      } else {
-        $("#medQuantity${i}").val(q.slice(0, q.length - 1))
-      } 
-    } else {
-      $("#medPrice${i}").val('')
-    }
-  })
+//   $("#medQuantity${i}").keyup(function () {
+//     var q = $("#medQuantity${i}").val()
+//     var rN = /[0-9]/
+//     console.log(q)
+//     console.log(rN.test(q[q.length-1]))
+//     if(q != '') {
+//       if(rN.test(q[q.length-1])) {
+//         q = $("#medQuantity${i}").val()
+//         if(q != '') {
+//           var s = $("#med${i}").val()
+//           if(s != 'none') {
+//             var selectedMed = schedule_data.inventory.filter(med => med._id == s)
+//             selectedMed = selectedMed[0]
+//             var price = parseInt(selectedMed.price) * parseInt(q);
+//             $("#medPrice${i}").val(price)
+//           }
+//         } else {
+//           $("#medPrice${i}").val('')
+//         }
+//       } else {
+//         $("#medQuantity${i}").val(q.slice(0, q.length - 1))
+//       } 
+//     } else {
+//       $("#medPrice${i}").val('')
+//     }
+//   })
+//   `)
+// }
+
+for(let i = 38; i >= 31; i--) {
+  console.log(`
+  <tr>
+    <td class="t-${i+10}">${i+10}</td>
+    <td class="t-${i+10}"><input type="text" id="t-${i+10}" name="t-${i+10}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
+    <td class="t-${i}">${i}</td>
+    <td class="t-${i}"><input type="text" id="t-${i}" name="t-${i}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
+  </tr>
   `)
 }

@@ -14,7 +14,7 @@ const ScheduleSchema = mongoose.Schema({
       }
     ],
     serviceSimple: [],
-    medicine: [
+    medicine: [ 
       {
         _id: {
           type: mongoose.Schema.Types.ObjectId,

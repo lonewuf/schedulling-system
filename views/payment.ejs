@@ -1,0 +1,36 @@
+<% include ./partials/header %>
+ 
+  <% const months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];  %> 
+  <div class="container">
+      <h4 class="display-4">Name: <a href="/patient/search/<%= patient._id %>" class="text-primary"><%= patient.name %></a> </h4>
+      <p>Age: <%= patient.age %></p>
+      <p>Contact Number: <%= patient.contact_number %></p>
+      <p>Age: <%= patient.age %></p>
+      <p>Date: <%= months[payment.month] %> <%= payment.day %> <%= payment.year %></p>
+      <p>Services: </p>
+      <ul> 
+      <% schedule.service.forEach(serv => { %>
+          <li><%= serv.name %> &#8369; <%= serv.price %></li>
+      <% }) %>
+      </ul>
+      <% if(schedule.medicine.length != 0){ %>
+      <p>Medicines: </p>
+      <ul> 
+          <% schedule.medicine.forEach(med => { %>
+            <li><%= med.text %> &nbsp; &nbsp; &nbsp; Quantity: <%= med.quantity %></li>
+          <% }) %>
+        </ul>
+      <% } else { %>
+        <p>No Medicines</p>
+      <% } %>
+      </ul>
+      <p>Service Total: &#8369; <%= payment.service_total %></p>
+      <% if(schedule.medicine.length == 0) { %>
+      <p>Medicine Total: &#8369; 0</p>
+      <% } else { %>
+        <p>Medicine Total: &#8369; <%= payment.medicine_total %></p>
+      <% } %>
+      <p class="font-weight-bold">Total of payment: &#8369; <%= payment.grand_total %></p>
+    </div>
+
+<% include ./partials/footer %>

@@ -98,7 +98,7 @@ const scheduleRoutes = require('./routes/schedule')
 const patientRoutes = require('./routes/patient')
 const userRoutes = require('./routes/user')
 const serviceRoutes = require('./routes/service')
-const inventoryRoutes = require('./routes/inventory')
+const inventoryRoutes = require('./routes/inventory') 
 const paymentRoutes = require('./routes/payment')
 
 // Include routes in server

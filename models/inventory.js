@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // User Schema
-const InventorySchema = mongoose.Schema({
+const InventorySchema = mongoose.Schema({ 
    
     name: {
         type: String,

@@ -1520,39 +1520,47 @@ function appendPayment(event) {
   schedule_data.inventory.forEach(med => {
     if(med.is_med == 'yes') {
       medSelect6.append(`<option value="${med._id}">${med.name} - &#8369 ${med.price}</option>`)
-    }
+    } 
   })
 
   var validationTime = $(`<div id="ampm-invalid" class="all-validations"></div>`)
   var validationService = $(`<div id="service-invalid" class="all-validations"></div>`)
   var validationService2 = $(`<div id="service2-invalid" class="all-validations"></div>`)
 
+
+  var validationQ1 = $(`<div id="q1-invalid" class="all-validations"></div>`)
+  var validationQ2 = $(`<div id="q2-invalid" class="all-validations"></div>`)
+  var validationQ3 = $(`<div id="q3-invalid" class="all-validations"></div>`)
+  var validationQ4 = $(`<div id="q4-invalid" class="all-validations"></div>`)
+  var validationQ5 = $(`<div id="q5-invalid" class="all-validations"></div>`)
+  var validationQ6 = $(`<div id="q6-invalid" class="all-validations"></div>`)
+
   form1.append(label1).append(select1).append(validationTime)
   form2.append(label2).append(select2).append(validationService)
   form3.append(label3).append(select3).append(validationService2)
 
   form4.append(medSelectLabel1).append(medSelect1)
-  form5.append(medQuantityLabel1).append(medQuantity1)
+  form5.append(medQuantityLabel1).append(medQuantity1).append(validationQ1)
   form6.append(medPriceLabel1).append(medPrice1)
 
   form7.append(medSelectLabel2).append(medSelect2)
-  form8.append(medQuantityLabel2).append(medQuantity2)
+  form8.append(medQuantityLabel2).append(medQuantity2).append(validationQ2)
   form9.append(medPriceLabel2).append(medPrice2)
 
   form10.append(medSelectLabel3).append(medSelect3)
-  form11.append(medQuantityLabel3).append(medQuantity3)
+  form11.append(medQuantityLabel3).append(medQuantity3).append(validationQ3)
   form12.append(medPriceLabel3).append(medPrice3)
 
   form13.append(medSelectLabel4).append(medSelect4)
-  form14.append(medQuantityLabel4).append(medQuantity4)
+  form14.append(medQuantityLabel4).append(medQuantity4).append(validationQ4)
   form15.append(medPriceLabel4).append(medPrice4)
 
   form16.append(medSelectLabel5).append(medSelect5)
-  form17.append(medQuantityLabel5).append(medQuantity5)
+  form17.append(medQuantityLabel5).append(medQuantity5).append(validationQ5)
   form18.append(medPriceLabel5).append(medPrice5)
 
   form19.append(medSelectLabel6).append(medSelect6)
-  form20.append(medQuantityLabel6).append(medQuantity6)
+  form20.append(medQuantityLabel6).append(medQuantity6).append(validationQ6)
   form21.append(medPriceLabel6).append(medPrice6)
 
   col1.append(form1)
