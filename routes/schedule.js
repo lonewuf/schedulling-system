@@ -5,6 +5,7 @@ const Patient = require('../models/patient')
 const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
 const Service = require('../models/service')
+const Inventory = require('../models/inventory')
 
 router.get('/', (req, res) => {
   res.render('schedule')
@@ -16,30 +17,67 @@ router.get('/initial-load', (req, res) => {
   const month = date.getMonth() + 1;
   var allData = {}
 
-  Schedule.find({done: false})
+  Schedule.find({}) 
     .populate('patient')
+    .populate('service')
     .then(scheduleData => {
       Patient.find({})
         .populate('teeth')
         .then(patientData => {
           Service.find({})
             .then(serviceData => {
-              allData.scheduleData = scheduleData;
-              allData.patientData = patientData;
-              allData.serviceData = serviceData;
-              console.log(allData.serviceData)
-              res.send(allData);
+              Inventory.find({is_med:'yes'})
+               .then(inventoryData => {
+                 
+                  allData.scheduleData = scheduleData;
+                  allData.patientData = patientData;
+                  allData.serviceData = serviceData;
+                  allData.inventoryData = inventoryData;
+                  console.log(inventoryData)
+                  res.send(allData);
+               })
+               .catch(err => console.log(err))
             })
             .catch(err => console.log(err))
         })
       
     })
     .catch(err => console.log(err))
+
+  // const tryThis = async () => {
+  //   try {
+  //     await Schedule.find({done: false})
+  //       .populate('patient')
+  //       .populate('service')
+  //       .then(scheduleData => { 
+  //         allData.scheduleData = scheduleData;
+  //       })
+  //     await Patient.find({})
+  //       .populate('teeth')
+  //       .then(patientData => { 
+  //         allData.patientData = patientData;
+  //       })
+  //     await Service.find({})
+  //       .then(serviceData => { 
+  //         allData.serviceData = serviceData;
+  //       })
+  //   } catch(err) {
+  //     console.log(err)
+  //   }
+    
+  // }
+  // tryThis()
+
+  // res.send(allData)
+
+
 })
 
 router.post('/add-schedule-with-patient', (req, res) => {
   const data = req.body
-
+  console.log(data.serviceSimple)
+  var sample = data.serviceSimple
+  console.log(sample, "sample")
   // Craete teeth document in database
   Teeth.create({
     t_11: data.t_11,
@@ -130,7 +168,7 @@ router.post('/add-schedule-with-patient', (req, res) => {
             day: data.day,
             time: data.time,
             ampm: data.ampm,
-            serviceSimple: data.serviceSimple
+            service: data.serviceSimple
           },
           (err, createdSchedule) => {
             if(err) {
@@ -139,7 +177,7 @@ router.post('/add-schedule-with-patient', (req, res) => {
               createdPatient.schedules.push(createdSchedule._id)
               createdPatient.save()
                 .then(updatedPatient => {
-                })
+                }) 
                 .catch(err => console.log(err))
             }
           }
@@ -166,7 +204,7 @@ router.post('/add-schedule', (req, res) => {
       year: data.year,
       day: data.day,
       ampm: data.ampm,
-      serviceSimple: data.serviceSimple
+      service: data.serviceSimple
     },
     (err, createdSchedule) => {
       if(err) {
@@ -191,7 +229,7 @@ router.post('/edit-schedule', (req, res) => {
         month: data.month,
         day: data.day,
         ampm: data.ampm,
-        serviceSimple: data.serviceSimple
+        service: data.serviceSimple
       },
     )
     .then(updatedSchedule => {

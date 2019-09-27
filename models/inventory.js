@@ -13,6 +13,9 @@ const InventorySchema = mongoose.Schema({
     },
     price: {
       type: Number,
+    },
+    is_med: {
+      type: String
     }
     
 });

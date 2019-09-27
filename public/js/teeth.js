@@ -520,7 +520,6 @@ $('.tooth-46').mouseleave(function(){
 
 $('.tooth-47').mouseover(function(){
   $('.tooth-47-parent').css('fill', 'red');
-  alert("sad") 
 });
 
 $('.tooth-47').mouseleave(function(){
@@ -532,8 +531,6 @@ $('.tooth-48').mouseover(function(){
 });
 $('.tooth-48').click(function(){
   $('.tooth-48-parent').css('fill', 'blue');
-  var a = prompt('enter service')
-  alert(a)
 });
 
 $('.tooth-48').mouseleave(function(){

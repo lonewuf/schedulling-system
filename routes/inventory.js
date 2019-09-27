@@ -5,8 +5,8 @@ const Patient = require('../models/patient')
 const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
 const Inventory = require('../models/inventory')
-const r = /[0-9]+.*[0-9]*/
-const rQuantity = /[0-9]+/
+const r = /^\d+(\.\d{1,2})?$/
+const rQuantity = /^[0-9]*$/
 
 router.get('/', (req, res) => {
 
@@ -24,11 +24,26 @@ router.post('/add-product', (req, res) => {
   const name = req.body.name
   const price = req.body.price
   const quantity = req.body.quantity
+  const is_med = req.body.is_med
+  console.log(req.body)
+
   
+  if(name === "") {
+    req.flash('danger', 'Name is required')
+    res.redirect('/inventory'); 
+  }
+  if(quantity === "") {
+    req.flash('danger', 'Quantity is required')
+    res.redirect('/inventory');
+  }
+  if(is_med === undefined) {
+    req.flash('danger', 'Please specify if medicine or not')
+    res.redirect('/inventory');
+  }
 
   if((r.test(price) && rQuantity.test(quantity)) || price === "") {
     if(rQuantity.test(quantity)) {
-      Inventory.create({name, price, quantity}, (err, createdProduct) => {
+      Inventory.create({name, price, quantity, is_med}, (err, createdProduct) => {
         if(err) {
           throw(err)
         } else {
@@ -43,7 +58,7 @@ router.post('/add-product', (req, res) => {
     
   } else {
     console.log('sadasd')
-    req.flash('danger', 'Price and Quantity must be numberic')
+    req.flash('danger', 'Price and Quantity must be numeric')
     res.redirect('/inventory');
   }
 })
@@ -52,6 +67,20 @@ router.post('/edit-product/:id', (req, res) => {
   const name = req.body.name
   const price = req.body.price
   const id = req.params.id
+  const is_med = req.body.is_med
+
+  if(name === "") {
+    req.flash('danger', 'Name is required')
+    res.redirect('/inventory'); 
+  }
+  if(quantity === "") {
+    req.flash('danger', 'Quantity is required')
+    res.redirect('/inventory');
+  }
+  if(is_med === undefined) {
+    req.flash('danger', 'Please specify if medicine or not')
+    res.redirect('/inventory');
+  }
 
   if(r.test(price)) {
     Inventory.updateOne({_id: id}, {name, price}, (err, updatedProduct) => {

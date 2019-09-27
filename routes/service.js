@@ -5,7 +5,7 @@ const Patient = require('../models/patient')
 const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
 const Service = require('../models/service')
-const r = /[0-9]+.*[0-9]*/
+const r = /^\d+(\.\d{1,2})?$/
 
 router.get('/', (req, res) => {
 

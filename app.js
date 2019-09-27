@@ -99,19 +99,21 @@ const patientRoutes = require('./routes/patient')
 const userRoutes = require('./routes/user')
 const serviceRoutes = require('./routes/service')
 const inventoryRoutes = require('./routes/inventory')
+const paymentRoutes = require('./routes/payment')
 
 // Include routes in server
 app.use('/schedule', scheduleRoutes);
 app.use('/patient', patientRoutes);
 app.use('/services', serviceRoutes);
 app.use('/inventory', inventoryRoutes);
+app.use('/payment', paymentRoutes);
 app.use('/', userRoutes)
 
 // Server Host
 const server_host = process.env.YOUR_HOST || '0.0.0.0';
 
 // Choose Port
-const port =   process.env.PORT || 3000 ;
+const port = process.env.PORT || 3000 ;
 
 // Start Server
 app.listen(port, server_host,() => {

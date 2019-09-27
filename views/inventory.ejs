@@ -12,6 +12,7 @@
             <th>Product Name</th>
             <th>Price</th>
             <th>Quantity</th>
+            <th>Is Medicine</th>
             <th colspan="2">Actions</th>
         </tr>
     </thead>
@@ -29,6 +30,11 @@
               <a data-toggle="modal" data-target="#<%= product._id %>-add" class="text-success font-weight-bold">+</a>
               <a data-toggle="modal" data-target="#<%= product._id %>-minus" class="text-danger font-weight-bold">-</a>
             </td>
+            <% if(product.is_med == 'yes') {%>
+              <td class="text-success">Medicine</td>
+              <% } else {%>
+              <td class="text-warning">Not Medicine</td>
+              <% } %>
             <td><button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#<%= product._id %>">Edit Product</button></td>
             <td><a href="/inventory/delete-product/<%= product._id %>" class="btn btn-sm btn-danger">Delete Product</a></td>
         </tr>
@@ -54,14 +60,19 @@
           <form action="/inventory/add-product" method="POST">
             <div class="modal-body">
               
-                <div class="form-group">
+                <div class="form-group"> 
                   <label for="name">Name of Product</label>
                   <input type="text" name="name" id="name" placeholder="Product name" class="form-control">
                 </div>
                 <div class="form-group">
                     <label for="name">Quantity</label>
                     <input type="text" name="quantity" id="quantity" placeholder="Quantity" class="form-control">
-                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="gender">Is Medicine: &nbsp; &nbsp; &nbsp;</label>
+                  <input type="radio" name="is_med" value="yes"> Yes  &nbsp; &nbsp;
+                  <input type="radio" name="is_med" value="no"> No  &nbsp; &nbsp;
+                </div>
                 <div class="input-group">
                   <span class="input-group-addon">&#8369;</span>
                   <input type="text" name="price" id="price" class="form-control" placeholder="Price">

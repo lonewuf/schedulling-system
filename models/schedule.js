@@ -6,16 +6,7 @@ const ScheduleSchema = mongoose.Schema({
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Patient'
-    }, 
-    // month: {
-    //   type: String,
-    // },
-    // day: {
-    //   type: String,
-    // },
-    // year: {
-    //   type: String
-    // },
+    },
     service: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -25,8 +16,19 @@ const ScheduleSchema = mongoose.Schema({
     serviceSimple: [],
     medicine: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Medicine'
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Medicine'
+        },
+        quantity: {
+          type: Number
+        },
+        price: {
+          type: Number
+        },
+        text: {
+          type: String
+        }
       }
     ],
     month: {
@@ -38,10 +40,7 @@ const ScheduleSchema = mongoose.Schema({
     year: {
       type: Number
     },
-    time: {
-      type: String
-    },
-    ampm: {
+    ampm: { 
       type: String
     },
     date: {
