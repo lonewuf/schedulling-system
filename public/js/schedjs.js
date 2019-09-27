@@ -1,7 +1,12 @@
-// Setup the calendar with the current date
-const host = 'http://localhost:3000';
+// Dev host
+// const host = 'http://localhost:3000';
+
+// Showcase Host
+const host = 'https://stormy-savannah-61307.herokuapp.com'
+ 
+// Global Variables
 const numOfHours = 2
-const regexAge = /[0-9]+/
+const regexAge = /^[0-9]*$/
 var validationErrors = []
 
 var schedule_data = {
