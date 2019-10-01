@@ -58,7 +58,7 @@ const PaymentSchema = mongoose.Schema({
   },
   grand_total: {
     type: Number
-  },
+  }, 
   paid: {
     type: Boolean,
       default: false
@@ -67,4 +67,3 @@ const PaymentSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);
-

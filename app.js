@@ -15,7 +15,7 @@ const auth = require('./config/auth');
 
 // Setup Database
 const myDb = require('./config/database');
-mongoose.connect(myDb.daatabaseProd, { useNewUrlParser: true,  useUnifiedTopology: true});
+mongoose.connect(myDb.databaseDev, { useNewUrlParser: true,  useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'Connection error: '))
   .once('open', () => console.log('Connected to MongoDB'))
@@ -39,41 +39,6 @@ app.use(session({
 // Set global variable errors to null
 app.locals.errors = null;
 
-// Validators
-app.use(expressValidator({
-  errorFormatter: function (param, msg, value) {
-      var namespace = param.split('.')
-              , root = namespace.shift()
-              , formParam = root;
-
-      while (namespace.length) {
-          formParam += '[' + namespace.shift() + ']';
-      }
-      return {
-          param: formParam,
-          msg: msg,
-          value: value
-      };
-  },
-  customValidators: {
-    isImage: function (value, filename) {
-        var extension = (path.extname(filename)).toLowerCase();
-        switch (extension) {
-            case '.jpg':
-                return '.jpg';
-            case '.jpeg':
-                return '.jpeg';
-            case '.png':
-                return '.png';
-            case '':
-                return '.jpg';
-            default:
-                return false;
-        }
-    }
-  }
-}));
-
 // For flash message
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
@@ -82,12 +47,12 @@ app.use(function (req, res, next) {
 });
 
 // Passport Config
-// require('./config/passport')(passport);
-// // Passport Middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
-
+// Set user if available. If not, set it to null
 app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
@@ -108,6 +73,10 @@ app.use('/services', serviceRoutes);
 app.use('/inventory', inventoryRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/', userRoutes)
+
+app.get('*', function(req, res){
+  res.status(404).send(req.url);
+});
 
 // Server Host
 const server_host = process.env.YOUR_HOST || '0.0.0.0';

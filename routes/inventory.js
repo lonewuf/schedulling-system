@@ -1,4 +1,5 @@
 const router = require('express').Router({mergeParams: true});
+const auth = require('../config/auth')
 
 // Import models
 const Patient = require('../models/patient')
@@ -8,7 +9,7 @@ const Inventory = require('../models/inventory')
 const r = /^\d+(\.\d{1,2})?$/
 const rQuantity = /^[0-9]*$/
 
-router.get('/', (req, res) => {
+router.get('/', auth.isUser, (req, res) => {
 
   Inventory.find({}, (err, products) => {
     if(err) {
@@ -25,7 +26,6 @@ router.post('/add-product', (req, res) => {
   const price = req.body.price
   const quantity = req.body.quantity
   const is_med = req.body.is_med
-  console.log(req.body)
 
   
   if(name === "") {
@@ -57,7 +57,6 @@ router.post('/add-product', (req, res) => {
     }
     
   } else {
-    console.log('sadasd')
     req.flash('danger', 'Price and Quantity must be numeric')
     res.redirect('/inventory');
   }
@@ -67,6 +66,7 @@ router.post('/add-product', (req, res) => {
 router.post('/edit-product/:id', (req, res) => {
   const name = req.body.name
   const price = req.body.price
+  const quantity = req.body.quantity
   const id = req.params.id
   const is_med = req.body.is_med
 
@@ -82,9 +82,9 @@ router.post('/edit-product/:id', (req, res) => {
     req.flash('danger', 'Please specify if medicine or not')
     res.redirect('/inventory');
   }
-
+ 
   if(r.test(price)) {
-    Inventory.updateOne({_id: id}, {name, price}, (err, updatedProduct) => {
+    Inventory.updateOne({_id: id}, {name, price, quantity, is_med}, (err, updatedProduct) => {
       if(err) {
         throw(err)
       } else {
@@ -130,7 +130,6 @@ router.post('/minus-quantity/:id', (req, res) => {
           req.flash('danger', "Quantity limit is only zero")
           res.redirect('/inventory');
         } else {
-          console.log(foundProduct.quantity + " - " + parseInt(quantity))
           Inventory.updateOne({_id: id}, {$inc: {quantity: -parseInt(quantity)}}, (err, updatedProduct) => {
             if(err) {
               throw(err)
@@ -149,7 +148,7 @@ router.post('/minus-quantity/:id', (req, res) => {
 })
 
 
-router.get('/delete-product/:id', (req, res) => {
+router.get('/delete-product/:id', auth.isUser, (req, res) => {
 
   const id = req.params.id
 

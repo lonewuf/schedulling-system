@@ -16,7 +16,7 @@
     <% patients.forEach(patient => { %>
       <tr>
           <th><%= (counter+1) %></th>
-          <td><a href="/patient/search/<%= patient._id %>" class="text primary"><%= patient.name %></a></td>
+          <td><a target="_blank" href="/patient/search/<%= patient._id %>" class="text primary"><%= patient.name %></a></td>
           <td><%= patient.age %></td>
           <td><%= patient.contact_number %></td>
       </tr>

@@ -1,0 +1,81 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Dental Clinic</title>
+    <link rel="stylesheet" href="/css/schedstyle.css">
+    <!-- <link rel="stylesheet" href="/css/teeth.css"> -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/logincss.css">
+
+  </head>
+  <body>
+  <nav class="navbar navbar-expand-sm navbar-dark shadow  bg-primary">
+      <div class="container"> 
+        <a class="navbar-brand" href="/">Dental Clinic</a>
+            <ul class="navbar-nav">
+                <!-- <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/schedule">Schedule</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/services">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/inventory">Inventory</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/payment">Payments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/patient">Patient List</a>
+                </li> -->
+            </ul>
+        </div>
+  </nav>
+    
+
+
+
+<header class="masthead">
+  <div class="container h-100">
+    <div class="row h-100 align-items-center">
+      <div class="col-4"></div>
+      <div class="col-4 text-center">
+        <div class="card bg-primary text-white text-center card-form">
+          <div class="card-body">
+            <%- messages('messages', locals) %>
+            <h3>Login</h3>
+            <p>Fill out to the form login</p>
+            <form action="/login" method="POST">
+              <div class="form-group">
+                <input type="text" name="username" class="form-control form-control-lg" placeholder="Username">
+              </div>
+              <div class="form-group">
+                <input type="password" name="password" class="form-control form-control-lg" placeholder="Password">
+              </div>
+              <input type="submit" value="Login" class="btn btn-outline-light btn-block">
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-4"></div>
+    </div>
+  </div>
+</header>
+
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+  </script>
+  <script src="/js/jquery-3.2.1.min.js"></script>
+  <script src="/js/popper.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/plugins.js"></script>
+  <!-- <script src="/js/raphael-min.js"></script> -->
+  <script src="/js/teeth.js"></script>
+  <script src="/js/schedjs.js"></script>
+  </body>
+</html>

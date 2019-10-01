@@ -1,4 +1,5 @@
 const router = require('express').Router({mergeParams: true});
+const auth = require('../config/auth')
 
 // Import models
 const Patient = require('../models/patient')
@@ -22,23 +23,27 @@ router.get('/', (req, res) => {
 router.post('/add-service', (req, res) => {
   const name = req.body.name
   const price = req.body.price
-  
-
-  if(r.test(price)) {
+  if(name != '') {
     
-    Service.create({name, price}, (err, createdService) => {
-      if(err) {
-        throw(err)
-      } else {
-        req.flash('success', 'Service is created')
-        res.redirect('/services');
-      }
-    })
-  } else {
-    console.log('sadasd')
-    req.flash('danger', 'Price must be numberic')
-    res.redirect('/services');
+    if(r.test(price)) {
+    
+      Service.create({name, price}, (err, createdService) => {
+        if(err) {
+          throw(err)
+        } else {
+          req.flash('success', 'Service is created')
+          res.redirect('/services');
+        }
+      })
+    } else {
+      req.flash('danger', 'Price must be numeric')
+      res.redirect('/services');
+    }
+  }  else {
+    req.flash('danger', 'Name is required')
+    res.redirect('/services')
   }
+  
 })
 
 router.post('/edit-service/:id', (req, res) => {
@@ -46,22 +51,28 @@ router.post('/edit-service/:id', (req, res) => {
   const price = req.body.price
   const id = req.params.id
 
-  if(r.test(price)) {
-    Service.updateOne({_id: id}, {name, price}, (err, updatedService) => {
-      if(err) {
-        throw(err)
-      } else {
-        req.flash('success', 'Service is updated')
-        res.redirect('/services');
-      }
-    })
+  if(name != '') {
+    if(r.test(price)) {
+      Service.updateOne({_id: id}, {name, price}, (err, updatedService) => {
+        if(err) {
+          throw(err)
+        } else {
+          req.flash('success', 'Service is updated')
+          res.redirect('/services');
+        }
+      })
+    } else {
+      req.flash('danger', 'Price must be numeric')
+      res.redirect('/services');
+    }
   } else {
-    req.flash('danger', 'Price must be numberic')
+    req.flash('danger', 'Name is required')
     res.redirect('/services');
   }
+  
 })
 
-router.get('/delete-service/:id', (req, res) => {
+router.get('/delete-service/:id', auth.isUser, (req, res) => {
 
   const id = req.params.id
 

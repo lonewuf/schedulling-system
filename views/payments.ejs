@@ -18,10 +18,11 @@
       <% payments.forEach(payment => { %>
         <tr>
             <th><%= (counter+1) %></th>
-            <td><a href="/patient/<%= payment.patient._id %>" class="text-primary"><%= payment.patient.name %></a></td>
+            <td><a target="_blank" href="/patient/search/<%= payment.patient._id %>" class="text-primary"><%= payment.patient.name %></a></td>
             <td><%= months[payment.month - 1] %> <%= payment.day %> <%= payment.year %></td>
-            <td><a href="/payment/search-by-payment/<%= payment._id %>" class="btn btn-secondary">More Info</a></td>
             <td>&#8369; <%= payment.grand_total %></td>
+            <td><a target="_blank" href="/payment/search-by-payment/<%= payment._id %>" class="btn btn-secondary">More Info</a></td>
+            
         </tr>
         <% counter++ %>
       <% }) %>

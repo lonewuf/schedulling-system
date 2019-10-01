@@ -1,4 +1,41 @@
+
+<div class="modal" id="registerModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Register Admin</h5>
+        <button class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form action="/register" method="POST">
+          <div class="form-group">
+            <label for="username">Name</label>
+            <input type="text" name="name" placeholder="Name" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" placeholder="Username" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" placeholder="Password" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="password">Confirm Password</label>
+              <input type="password" name="password2" placeholder="Password" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-success" type="submit">Register</button>
+          <button class="btn btn-danger" >Cancel</button>
+        </div>
+        </form>
+    </div>
+  </div>
 </div>
+
+</div>
+
 <script
 src="https://code.jquery.com/jquery-3.2.1.min.js"
 integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="

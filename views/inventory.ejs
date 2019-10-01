@@ -1,6 +1,6 @@
 <% include ./partials/header %>
 
-  <h4 class="display-4">Add Product in Inventory</h4>
+  <h4 class="display-4 text-center">Inventory</h4>
   <button class="btn btn-success btn-lg" data-toggle="modal" data-target="#addProduct">Add Product</button>
   <% var counter = 0 %>
   <% if(products.length > 0) { %>
@@ -27,11 +27,11 @@
             <td>&#8369; <%= product.price %></td>
             <% } %>
             <td><%= product.quantity%> 
-              <a data-toggle="modal" data-target="#<%= product._id %>-add" class="text-success font-weight-bold">+</a>
-              <a data-toggle="modal" data-target="#<%= product._id %>-minus" class="text-danger font-weight-bold">-</a>
+              <a data-toggle="modal" style="cursor: pointer" data-target="#<%= product._id %>-add" class="text-success font-weight-bold">&nbsp;+</a>&nbsp;&nbsp;
+              <a data-toggle="modal" style="cursor: pointer" data-target="#<%= product._id %>-minus" class="text-danger font-weight-bold">-</a>
             </td>
             <% if(product.is_med == 'yes') {%>
-              <td class="text-success">Medicine</td>
+              <td class="text-success" >Medicine</td>
               <% } else {%>
               <td class="text-warning">Not Medicine</td>
               <% } %>
@@ -93,7 +93,7 @@
       <% products.forEach(product => {%>
       <div class="modal" id="<%= product._id %>">
         <div class="modal-dialog">
-          <div class="modal-content">
+          <div class="modal-content"> 
             <div class="modal-header">
               <h5 class="modal-title text-center">Edit <%= product.name %> product</h5>
               <button class="close" data-dismiss="modal">&times;</button>
@@ -104,6 +104,21 @@
                   <div class="form-group">
                     <label for="name">Name of Product</label>
                     <input type="text" name="name" id="name" value="<%= product.name %>" placeholder="Product name" class="form-control">
+                  </div>
+                  <div class="form-group">
+                      <label for="name">Quantity</label>
+                      <input type="text" value="<%= product.quantity %>" name="quantity" id="quantity" placeholder="Quantity" class="form-control">
+                  </div>
+                  <div class="form-group">
+                    <label for="gender">Is Medicine: &nbsp; &nbsp; &nbsp;</label>
+                    <%if(product.is_med == 'yes') {%>
+                      <input type="radio" name="is_med" checked value="yes"> Yes  &nbsp; &nbsp;
+                      <input type="radio" name="is_med" value="no"> No  &nbsp; &nbsp;
+                    <% } else { %>
+                      <input type="radio" name="is_med" value="yes"> Yes  &nbsp; &nbsp;
+                      <input type="radio" name="is_med" checked value="no"> No  &nbsp; &nbsp;
+                    <% } %>
+                    
                   </div>
                   <div class="input-group">
                     <span class="input-group-addon">&#8369;</span>

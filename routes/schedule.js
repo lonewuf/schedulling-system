@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const auth = require('../config/auth')
 
 // Import models
 const Patient = require('../models/patient')
@@ -7,42 +8,45 @@ const Teeth = require('../models/teeth')
 const Service = require('../models/service')
 const Inventory = require('../models/inventory')
 
-router.get('/', (req, res) => {
+// Render the schedule page
+// Get /schedule
+router.get('/', auth.isUser, (req, res) => {
   res.render('schedule')
 }) 
 
-router.get('/initial-load', (req, res) => {
+// Load all the data needed in schedule page
+// Get /schedule/initial-load
+router.get('/initial-load', (req, res) => { 
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   var allData = {}
 
-  Schedule.find({}) 
-    .populate('patient')
-    .populate('service')
-    .then(scheduleData => {
-      Patient.find({})
-        .populate('teeth')
-        .then(patientData => {
-          Service.find({})
-            .then(serviceData => {
-              Inventory.find({is_med:'yes'})
-               .then(inventoryData => {
+  // Schedule.find({}) 
+  //   .populate('patient')
+  //   .populate('service')
+  //   .then(scheduleData => {
+  //     Patient.find({})
+  //       .populate('teeth')
+  //       .then(patientData => {
+  //         Service.find({})
+  //           .then(serviceData => {
+  //             Inventory.find({is_med:'yes'})
+  //              .then(inventoryData => {
                  
-                  allData.scheduleData = scheduleData;
-                  allData.patientData = patientData;
-                  allData.serviceData = serviceData;
-                  allData.inventoryData = inventoryData;
-                  console.log(inventoryData)
-                  res.send(allData);
-               })
-               .catch(err => console.log(err))
-            })
-            .catch(err => console.log(err))
-        })
+  //                 allData.scheduleData = scheduleData;
+  //                 allData.patientData = patientData;
+  //                 allData.serviceData = serviceData;
+  //                 allData.inventoryData = inventoryData;
+  //                 res.send(allData);
+  //              })
+  //              .catch(err => console.log(err))
+  //           })
+  //           .catch(err => console.log(err))
+  //       })
       
-    })
-    .catch(err => console.log(err))
+  //   })
+  //   .catch(err => console.log(err))
 
   // const tryThis = async () => {
   //   try {
@@ -54,7 +58,7 @@ router.get('/initial-load', (req, res) => {
   //       })
   //     await Patient.find({})
   //       .populate('teeth')
-  //       .then(patientData => { 
+  //       .then(patientData => {  
   //         allData.patientData = patientData;
   //       })
   //     await Service.find({})
@@ -70,9 +74,53 @@ router.get('/initial-load', (req, res) => {
 
   // res.send(allData)
 
+  const tryThis = async () => {
+
+    var thisData = {}
+
+    const s = await Schedule.find({})
+      .populate('patient')
+      .populate('service')
+      .then(data => {
+        return data
+      })
+      .catch(err => console.log(err))
+
+    const p = await Patient.find({})
+      .populate('teeth')
+      .then(data => { 
+        return data
+      })
+      .catch(err => console.log(err))
+
+    const serv = await Service.find({})
+      .then(data => { 
+        return data
+      })
+      .catch(err => console.log(err))
+
+    const i = await Inventory.find({is_med:'yes'})
+      .then(data => {
+        return data
+      })
+      .catch(err => console.log(err))
+    
+    thisData.patientData = p
+    thisData.scheduleData = s
+    thisData.serviceData = serv
+    thisData.inventoryData = i
+    
+    return thisData
+  }
+
+  tryThis().then(data => res.send(data))
+  
+  
 
 })
 
+// Route for creating patient with schedule
+// POST /schedule/add-schedule-with-patient
 router.post('/add-schedule-with-patient', (req, res) => {
   const data = req.body
   console.log(data.serviceSimple)
@@ -188,15 +236,13 @@ router.post('/add-schedule-with-patient', (req, res) => {
   )  
 
   })
-
-  
-
-  // console.log(data);
 })
 
+// Add schedule to patient
 router.post('/add-schedule', (req, res) => {
   const data = req.body
 
+  // Create schedule
   Schedule.create(
     {
       patient: data.patientID,
@@ -210,6 +256,7 @@ router.post('/add-schedule', (req, res) => {
       if(err) {
         throw (err)
       } else {
+        // Update patient to be scheduled
         Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: true}})
           .then(scheduledPatient => {
             console.log(scheduledPatient)
@@ -221,6 +268,7 @@ router.post('/add-schedule', (req, res) => {
 
 })
 
+// updating schedule
 router.post('/edit-schedule', (req, res) => {
   const data = req.body
   console.log(data)
@@ -269,8 +317,6 @@ router.get('/get-schedule-day/:year/:month/:day', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.get('/get-schedule-month/:year/:month', (req, res) => {
-  
-})
+
 
 module.exports = router;

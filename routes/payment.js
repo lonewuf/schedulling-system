@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
       res.render('payments', {payments})
     })
     .catch()
-}) 
+})  
  
 router.get('/search-by-payment/:id', (req, res) => {
   const id = req.params.id

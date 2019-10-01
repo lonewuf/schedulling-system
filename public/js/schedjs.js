@@ -1,14 +1,31 @@
 // Dev host
-// const host = 'http://localhost:3000';
+const host = 'http://localhost:3000';
 
 // Showcase Host
-const host = 'https://stormy-savannah-61307.herokuapp.com'
+// const host = 'https://stormy-savannah-61307.herokuapp.com'
  
 // Global Variables
-const numOfHours = 2
+const numOfHours = 1
 const regexAge = /^[0-9]*$/
 var validationErrors = []
+const months = [ 
+  "January", 
+  "February", 
+  "March", 
+  "April", 
+  "May", 
+  "June", 
+  "July", 
+  "August", 
+  "September", 
+  "October", 
+  "November", 
+  "December" 
+];  
 
+
+
+// All data loaded here
 var schedule_data = {
   "schedules": [], 
   "patients": [],
@@ -16,8 +33,10 @@ var schedule_data = {
   "inventory": []
 };
 
+// All patient's data loaded here
 var allPatients = []
 
+// Initialize all components needed
 $(document).ready(function(){ 
   var date = new Date();
   var today = date.getDate();
@@ -32,47 +51,54 @@ $(document).ready(function(){
   $("#search-patient").keyup({date: date}, search_patient)
   // Set current month as active
   $(".months-row").children().eq(date.getMonth()).addClass("active-month");
+
+  // Load all data for this page
   init_events()
-  // init_patients()
-  console.log(schedule_data["schedules"])
-  console.log(schedule_data["inventory"])
-  console.log(schedule_data)
+
+
   init_calendar(date)
+
+  // Catch bug for not displaying schedules on load
   setTimeout(function(){
     $(".right-button").click();
-  },2000);
+  },1000);
   setTimeout(function(){
     $(".left-button").click();
-  },3000);
+  },2000);
+
+  // Check and show all events
   var events = check_events(today, date.getMonth()+1, date.getFullYear());
   show_events(events, months[date.getMonth()], today);
 });
 
-function pause(milliseconds) {
-	var dt = new Date();
-	while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
-}
 
+// function pause(milliseconds) {
+// 	var dt = new Date();
+// 	while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
+// }
+
+//------------------------------------------------------
+// Get all data needed and load it in "schedule_data"   |
+//------------------------------------------------------
 function init_events() {
   $.ajax({
     url: `${host}/schedule/initial-load`,
     type: "GET",
-    dataType: "json",
-    success: function (data) {
+    dataType: "json"
+  })
+  .then(data => {
         schedule_data.schedules = data.scheduleData
         schedule_data.patients = data.patientData
         schedule_data.services = data.serviceData
         schedule_data.inventory = data.inventoryData
         allPatients = schedule_data.patients;
-        console.log(schedule_data)
-    },
-    error: function (error) {
-        console.log(`Error ${error}`);
-    }
   })
+  .catch(err => console.log(err))
 }
 
-// Initialize the calendar by appending the HTML dates
+//------------------------------------------------------
+// Initialize the calendar by appending the HTML dates  |
+//------------------------------------------------------
 function init_calendar(date) {
   $(".tbody").empty();
   $(".events-container").empty();
@@ -104,7 +130,6 @@ function init_calendar(date) {
       else {
           var curr_date = $("<td class='table-date'>"+day+"</td>");
           var events = check_events(day, month+1, year);
-          console.log('-------')
           if(today===day && $(".active-date").length===0) {
               curr_date.addClass("active-date");
               show_events(events, months[month], day);
@@ -123,14 +148,19 @@ function init_calendar(date) {
   $(".year").text(year);
 }
 
-// Get the number of days in a given month/year
+
+//------------------------------------------------------
+// Get the number of days in a given month/year         |
+//------------------------------------------------------
 function days_in_month(month, year) {
   var monthStart = new Date(year, month, 1);
   var monthEnd = new Date(year, month + 1, 1);
   return (monthEnd - monthStart) / (1000 * 60 * 60 * 24);    
 }
 
-// Event handler for when a date is clicked
+//------------------------------------------------------
+// Event handler for when a date is clicked             |
+//------------------------------------------------------
 function date_click(event) {
   $(".events-container").show(400);
   $("#dialog").hide(250);
@@ -140,7 +170,9 @@ function date_click(event) {
   show_events(event.data.events, event.data.month, event.data.day);
 };
 
-// Event handler for when a month is clicked
+//------------------------------------------------------
+// Event handler for when a month is clicked            |
+//------------------------------------------------------
 function month_click(event) {
   $(".events-container").show(400);
   $("#dialog-2").hide(250);
@@ -153,7 +185,9 @@ function month_click(event) {
   init_calendar(date);
 }
 
-// Event handler for when the year right-button is clicked
+//----------------------------------------------------------
+// Event handler for when the year right-button is clicked  |
+//----------------------------------------------------------
 function next_year(event) {
   $("#dialog").hide(250);
   $("#dialog-2").hide(250);
@@ -164,7 +198,9 @@ function next_year(event) {
   init_calendar(date);
 }
 
-// Event handler for when the year left-button is clicked
+//---------------------------------------------------------
+// Event handler for when the year left-button is clicked  |
+//---------------------------------------------------------
 function prev_year(event) {
   $("#dialog").hide(250);
   var date = event.data.date;
@@ -174,88 +210,55 @@ function prev_year(event) {
   init_calendar(date);
 }
 
+//------------------------------------------------------
+// Display Patient list to schedule them                |
+//------------------------------------------------------
 function new_schedule(event) {
 
+  // Empty .patients-container
   $(".patients-container").empty()
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
       return;
-  // empty inputs and hide events
-  
+
   $("#dialog-2 input[type=text]").val('');
-  //   $("#dialog input[type=number]").val('');
   $(".events-container").hide(250);
   $("#dialog").hide(250);
   $("#dialog-2").show(500);
+
+  // Get all patients data then sotre it
   allPatients = schedule_data.patients;
-  console.log(schedule_data.patients)
+  // Filter patient list that is not scheduled
   var availablePatients = schedule_data.patients.filter(patient => patient.is_scheduled === false)
+
+  // If filtered patient has value
   if(availablePatients.length > 0){
     availablePatients.forEach(patient => {
+
+      // Setup all tags
       var myContainer = $("<div class='container'></div>");
       var event_card = $("<div class='card text-white bg-primary m-4'></div>");
       var event_card_header = $(`<div class='card-header'>Name: ${patient.name}</div>`);
-      //handle time
-      // var a = event.ampm.split('-')
-      // var to_hours;
-      // var to_minutes = a[1];
-      // var to_ampm;
-      // to_ampm = (parseInt(a[0]) + 2 ) >= 12 ? 'PM' : 'AM'
-      // if((parseInt(a[0]) + 2 ) == 13) {
-      //   to_hours = '1'
-      // } else if ((parseInt(a[0]) + 2 ) == 14) {
-      //   to_hours = '2'
-      // } else {
-      //   to_hours = parseInt(a[0]) + 2
-      // }
-      // Handle services
-      // var services = event.serviceSimple.join(',')
-      // var event_name = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-      // var event_contact_number = $("<div class='event-count'><strong>Contact Number: </strong>"+ event.patient.contact_number +"</div>");
-      // var event_time = $("<div class='event-name'><strong>Time: </strong>"+ event.time +":</div>");
-      // var event_name1 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-      // var event_name2 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-      // var event_name3 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-      // var event_name4 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-      // var cancel_button = $(`<div class='event-name'><strong><a id=${event._id} href="#">Cancel</strong></div>`);
-      // var event_name4 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
       var event_card_body = $("<div class='card-body'></div>");
-
-      // var event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm}</h4>`);
       var event_card_contact_number = $(`<p class='card-text'>Contact Number: ${patient.contact_number}</p>`);
       var event_card_time = $(`<p class='card-text'>Age: ${patient.age}</p>`);
       var event_card_edit =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-warning" id=${patient._id}-edit-patient href="#">Edit Patient</strong></div>`);
       var event_card_sched = $(`<div class='card-text '><strong><a class="btn btn-sm btn-success" id=${patient._id}-schedule-patient href="#">Schedule Patient</strong></div>`);
 
-
-
-    // if(event.cancelled != true) {
-      
-    
-      // $(event_card).append(event_name).append(event_contact_number).append(event_time).append(event_name1).append(event_name2).append(event_name3).append(event_name4).append(cancel_button);
+      // Append all tags in .patients-container
       $(event_card_body).append(event_card_contact_number).append(event_card_time).append(event_card_edit).append(event_card_sched);
+      $(event_card).append(event_card_header);
+      $(event_card).append(event_card_body);
+      $(myContainer).append(event_card);
+      $(".patients-container").append(myContainer)
 
-        $(event_card).append(event_card_header);
-        $(event_card).append(event_card_body);
-        $(myContainer).append(event_card);
-        $(".patients-container").append(myContainer)
-        // $(`#${event._id}-cancel`).click({id: event._id}, cancel_schedule);
-      // } else {
-      //   event_card = $("<div class='card text-white bg-danger m-4'></div>");
-      //   event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Cancelled</strong></h4>`);
-      //   $(event_card_body).append(event_card_title).append(event_card_time).append(event_card_services);
-
-      //   $(event_card).append(event_card_header);
-      //   $(event_card).append(event_card_body);
-      //   $(myContainer).append(event_card);
-      //   $(".events-container").append(myContainer)
-      //   $(`#${event._id}-cancel`).click({id: event._id}, cancel_schedule);
-
-      // }
-      $(`#${patient._id}-edit-patient`).click({id: patient._id, date: event.data.date}, edit_patient);
+      // Add click events on buttons
+      $(`#${patient._id}-edit-patient`).click({id: patient._id, date: event.data.date}, update_patient);
       $(`#${patient._id}-schedule-patient`).click({id: patient._id, date: event.data.date}, schedule_patient);
     
     })
+  
+  // If no patient or all patient are scheduled
   } else {
     var myContainer = $("<div class='container'></div>");
     var noPatientAvailable = $("<h4 class='display-4 text-center'>No Patient Available</h4>")
@@ -265,92 +268,61 @@ function new_schedule(event) {
   }
 }
 
+//------------------------------------------------------
+// Handles action on searching patient                  |
+//------------------------------------------------------
 function search_patient(event) {
+
+  // Get the value of input#search-patient
   var searchName = $("#search-patient").val()
   // Filter patient that is not scheduled
   allPatients = schedule_data.patients.filter(patient => patient.is_scheduled === false)
-
   // Filter name based on input value()
   allPatients = allPatients.filter(patient => patient.name.includes(searchName))
-  
+
+  // empty .patients container
   $(".patients-container").empty()
   
-  console.log(allPatients)
   allPatients.forEach(patient => {
+    // Setup all tags
     var myContainer = $("<div class='container'></div>");
     var event_card = $("<div class='card text-white bg-primary m-4'></div>");
     var event_card_header = $(`<div class='card-header'>Name: ${patient.name}</div>`);
-    //handle time
-    // var a = event.ampm.split('-')
-    // var to_hours;
-    // var to_minutes = a[1];
-    // var to_ampm;
-    // to_ampm = (parseInt(a[0]) + 2 ) >= 12 ? 'PM' : 'AM'
-    // if((parseInt(a[0]) + 2 ) == 13) {
-    //   to_hours = '1'
-    // } else if ((parseInt(a[0]) + 2 ) == 14) {
-    //   to_hours = '2'
-    // } else {
-    //   to_hours = parseInt(a[0]) + 2
-    // }
-    // Handle services
-    // var services = event.serviceSimple.join(',')
-    // var event_name = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-    // var event_contact_number = $("<div class='event-count'><strong>Contact Number: </strong>"+ event.patient.contact_number +"</div>");
-    // var event_time = $("<div class='event-name'><strong>Time: </strong>"+ event.time +":</div>");
-    // var event_name1 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-    // var event_name2 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-    // var event_name3 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-    // var event_name4 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
-    // var cancel_button = $(`<div class='event-name'><strong><a id=${event._id} href="#">Cancel</strong></div>`);
-    // var event_name4 = $("<div class='event-name'><strong>Name: </strong>"+ event.patient.name +":</div>");
     var event_card_body = $("<div class='card-body'></div>");
-
-    // var event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm}</h4>`);
     var event_card_contact_number = $(`<p class='card-text'>Contact Number: ${patient.contact_number}</p>`);
     var event_card_time = $(`<p class='card-text'>Age: ${patient.age}</p>`);
     var event_card_edit =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-warning" id=${patient._id}-edit-patient href="#">Edit Patient</strong></div>`);
     var event_card_sched = $(`<div class='card-text '><strong><a class="btn btn-sm btn-success" id=${patient._id}-schedule-patient href="#">Schedule Patient</strong></div>`);
 
-
-
-    // if(event.cancelled != true) {
-      
+    // Append all tags in patients-container
+    $(event_card_body).append(event_card_contact_number).append(event_card_time).append(event_card_edit).append(event_card_sched);
+    $(event_card).append(event_card_header);
+    $(event_card).append(event_card_body);
+    $(myContainer).append(event_card);
+    $(".patients-container").append(myContainer)
     
-      // $(event_card).append(event_name).append(event_contact_number).append(event_time).append(event_name1).append(event_name2).append(event_name3).append(event_name4).append(cancel_button);
-      $(event_card_body).append(event_card_contact_number).append(event_card_time).append(event_card_edit).append(event_card_sched);
-
-      $(event_card).append(event_card_header);
-      $(event_card).append(event_card_body);
-      $(myContainer).append(event_card);
-      $(".patients-container").append(myContainer)
-      // $(`#${event._id}-cancel`).click({id: event._id}, cancel_schedule);
-    // } else {
-    //   event_card = $("<div class='card text-white bg-danger m-4'></div>");
-    //   event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Cancelled</strong></h4>`);
-    //   $(event_card_body).append(event_card_title).append(event_card_time).append(event_card_services);
-
-    //   $(event_card).append(event_card_header);
-    //   $(event_card).append(event_card_body);
-    //   $(myContainer).append(event_card);
-    //   $(".events-container").append(myContainer)
-      $(`#${patient._id}-edit-patient`).click({id: patient._id, date: event.data.date}, edit_patient);
-      $(`#${patient._id}-schedule-patient`).click({id: patient._id, date: event.data.date}, schedule_patient);
-
-    // }
+    // Add click events in buttons
+    $(`#${patient._id}-edit-patient`).click({id: patient._id, date: event.data.date}, update_patient);
+    $(`#${patient._id}-schedule-patient`).click({id: patient._id, date: event.data.date}, schedule_patient);
   })
 
 }
 
-function removeTextInForms() {
+//------------------------------------------------------
+// Remove texts and classes in inputs                   |
+//------------------------------------------------------
+function removeTextAndClassinInputs() {
   $("input").prop("checked", false)
   $("textarea").val("")
 
+  // Empty array of validationErrors
   validationErrors = []
+
   // Remove text in validations
   $('.all-validations').text("")
   $('input').removeClass("is-invalid");
-  // remove red error input on click
+
+  // Remove all classes in forms and set text to blank
   $("#name").click(function(){
     $("#name").removeClass("is-invalid");
     $("#name-invalid").text("");
@@ -377,6 +349,9 @@ function removeTextInForms() {
   })
 }
 
+//------------------------------------------------------
+// Fillups forms of specific patient                    |
+//------------------------------------------------------
 function fillupForm(patient) {
   
   // Patient info
@@ -391,7 +366,7 @@ function fillupForm(patient) {
   $("#diagnosis").val(patient.diagnosis)
   $("#address").val(patient.address)
   
-  // Teeth
+  // Teeth info
   $("#t-11").val(patient.teeth.t_11)
   $("#t-12").val(patient.teeth.t_12)
   $("#t-13").val(patient.teeth.t_13)
@@ -445,22 +420,26 @@ function fillupForm(patient) {
 
 
 
-// Edit patient
-function edit_patient(event) {
+//------------------------------------------------------
+// Handles actions when updating patient               |
+//------------------------------------------------------
+function update_patient(event) {
 
   $(".for-schedule").empty()
+
+  // Enabling forms
   enableForms()
-  removeTextInForms()
+  removeTextAndClassinInputs()
   // if a date isn't selected then do nothing
   if($(".active-date").length===0) 
-  return;
+    return;
   // remove red error input on click
   $("input").click(function(){
     $(this).removeClass("error-input");
   })
+
   // empty inputs and hide events
   $("#dialog input[type=text]").val('');
-  //   $("#dialog input[type=number]").val('');
   $(".events-container").hide(250);
   $("#dialog-2").hide(250);
   $("#dialog").hide(250);
@@ -475,23 +454,25 @@ function edit_patient(event) {
     $(".events-container").show(300);
   });
 
-  console.log(schedule_data.patients)
-
+  // Filter patients array to select specific patient then sotre it
   var editThisPatient = schedule_data.patients.filter(patient => patient._id == event.data.id)
   editThisPatient = editThisPatient[0]
-  $("#flexible-text").text(`Update ${editThisPatient.name}`)
-  fillupForm(editThisPatient)
 
-  
+  // Display the name of patient "Update (patient name)" 
+  $("#flexible-text").text(`Update ${editThisPatient.name}`)
+
+  // Fill up forms based on what stored in "editThisPatient"
+  fillupForm(editThisPatient)
 
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
+
+    // Store all data needed for updating patient
     var date = event.data.date;
     var name = $("#name").val().trim();
     // Radio button get
     var genderCheck = $("input[type='radio'][name='gender']:checked")
     var gender = genderCheck.length > 0 ? genderCheck.val() : '';
-
     var address = $("#address").val().trim();
     var contact_number = $("#contact_number").val().trim();
     // var company = $("#company").val().trim();
@@ -631,18 +612,21 @@ function edit_patient(event) {
       t_48,
     }
 
-    console.log(name + "  " + age)
+    // Check validations
     checkValidationsForPatient(name, age)
 
+    // If no error
     if(validationErrors.length === 0) {
       var patientID = event.data.id
       var day = parseInt($(".active-date").html());
-
       $("#dialog").hide(250);
-      console.log("update patient");
+
+      // Call another function to store it on database
       update_patient_json(patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions, patientID);
       date.setDate(day);
       init_calendar(date);
+
+    // If error arise, alert user
     } else {
       alert(`Please check your inputs in ${validationErrors}`)
     }
@@ -650,10 +634,13 @@ function edit_patient(event) {
 
 }
 
-
+//------------------------------------------------------
+// Call route to update Patient                         |
+//------------------------------------------------------
 function update_patient_json(patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions, patientID) {
 
-  var newPatient = {
+  // Create an object for updated patient
+  var updatePatient = {
     // Patient details
     "name": patientDetails.name,
     "gender": patientDetails.gender,
@@ -719,25 +706,21 @@ function update_patient_json(patientDetails, teethComments, medicalHistory, trea
 
   $.ajax({
     type: 'POST',
-    data: JSON.stringify(newPatient),
+    data: JSON.stringify(updatePatient),
     url: `${host}/patient/update-patient`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
   .then(data => {
     console.log(data)
-    // location.reload(true)      
+    // location.reload(true) 
   })
   .catch(err => console.log(err))
-
   location.reload(true)
-
 }
 
+//------------------------------------------------------
+// Disabling forms                                      |
+//------------------------------------------------------
 function disableForms() {
   $("input").prop("disabled", true)
   $("textarea").prop("disabled", true)
@@ -746,36 +729,48 @@ function disableForms() {
   $("#search-patient").prop("disabled", false)
 }
 
+//------------------------------------------------------
+// Enable forms                                         |
+//------------------------------------------------------
 function enableForms() {
   $("textarea").prop("disabled", false)
   $("input").prop("disabled", false)
 }
 
+//------------------------------------------------------
+// Handles on scheduling patient                       |
+//------------------------------------------------------
 function schedule_patient(event) {
 
+  // Empty for-schedule
   $(".for-schedule").empty()
-  removeTextInForms()
+  // Remove text and classes
+  removeTextAndClassinInputs()
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
-  return;
+    return;
   // remove red error input on click
   $("input").click(function(){
     $(this).removeClass("error-input");
   })
+
   // empty inputs and hide events
   $("#dialog input[type=text]").val('');
-  //   $("#dialog input[type=number]").val('');
   $(".events-container").hide(250);
   $("#dialog-2").hide(250);
   $("#dialog").hide(250);
   $("#dialog").show(400);
   
+  // Append forms for scheduling
   appendScheduleForms()
 
-  var editThisPatient = schedule_data.patients.filter(patient => patient._id == event.data.id)
-  editThisPatient = editThisPatient[0]
-  $("#flexible-text").text(`Schedule ${editThisPatient.name}`)
-  fillupForm(editThisPatient)
+  // Filter and store patient to be scheduled
+  var scheduleThisPatient = schedule_data.patients.filter(patient => patient._id == event.data.id)
+  scheduleThisPatient = scheduleThisPatient[0]
+  $("#flexible-text").text(`Schedule ${scheduleThisPatient.name}`)
+
+  // Fillup forms based on "scheduleThisPatient"
+  fillupForm(scheduleThisPatient)
 
   // Disable forms
   disableForms()
@@ -790,8 +785,7 @@ function schedule_patient(event) {
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
     var date = event.data.date;
-    console.log('click me')
-    // Time
+    // Get all forms needed for scheduling this patient
     var ampm = $("#ampm").val();
     var service = $("#service").val();
     var service2 = $("#service2").val();
@@ -800,11 +794,15 @@ function schedule_patient(event) {
     var date = new Date()
     var day = parseInt($(".active-date").html());
 
+    // Validate data for scheduling
     checkValidationsForSchedule(ampm, service, service2)
 
+    // If no error
     if(validationErrors.length == 0) {
 
+      // Check if time is occupied
       var filteredTime = check_time_of_events(day, date.getMonth()+1, date.getFullYear(), ampm)
+      // if chosen time is occupied, inform user
       if(filteredTime.length != 0) {
         $("#ampm").addClass("is-invalid");
         $("#ampm-invalid").addClass("invalid-feedback");
@@ -812,22 +810,29 @@ function schedule_patient(event) {
         validationErrors.push('Time')
       }
       
+      // If time is available
       if(validationErrors.length == 0) {
+
+        // Filter services that is value is not "none"
         var servicesFiltered = []
         services.forEach(serv => {
           if(serv != 'none'){
             servicesFiltered.push(serv)
           }
         })
-
         $("#dialog").hide(250);
-        console.log("new event");
+        
+        // Call function to schedule patient
         schedule_patient_json(date, day, ampm, servicesFiltered, patientID);
         date.setDate(day);
         init_calendar(date);
+
+      // If time is not available, alert user
       } else {
         alert(`Time is already occupied`)
       }
+
+    // If error(s) arise, Inform user
     } else {
       alert(`Please check your inputs in : ${validationErrors}`)
     }
@@ -835,13 +840,16 @@ function schedule_patient(event) {
 
 }
 
+//------------------------------------------------------
+// Call route to schedule patient                       |
+//------------------------------------------------------
 function schedule_patient_json(date, day, ampm, services, patientID) {
+
   var myServices = []
-  console.log("===============")
   services.forEach(service => {
     myServices.push(service)
   })
-
+  // Create new schedule
   var newSchedule = {
     "year": date.getFullYear(),
     "month": date.getMonth()+1,
@@ -850,81 +858,26 @@ function schedule_patient_json(date, day, ampm, services, patientID) {
     "patientID": patientID,
     "serviceSimple": myServices
   };
-
-
-
   $.ajax({
     type: 'POST',
     data: JSON.stringify(newSchedule),
     url: `${host}/schedule/add-schedule`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
   .then(data => {
     location.reload(true)      
   })
   .catch(err => console.log(err))
 
+  // Reload page to set all changes
   location.reload(true)
 }
 
-
-// Event handler for clicking the new event button
-function new_event(event) {
-  // if a date isn't selected then do nothing
-  if($(".active-date").length===0)
-      return;
-  // remove red error input on click
-  $("input").click(function(){
-      $(this).removeClass("error-input");
-  })
-  // empty inputs and hide events
-  $("#dialog input[type=text]").val('');
-//   $("#dialog input[type=number]").val('');
-  $(".events-container").hide(250);
-  $("#dialog").show(400);
-  // Event handler for cancel button
-  $("#cancel-button").click(function() {
-      $("#name").removeClass("error-input");
-      $("#count").removeClass("error-input");
-      $("#dialog").hide(300);
-      $(".events-container").show(300);
-  });
-  // Event handler for ok button
-  $("#ok-button").unbind().click({date: event.data.date}, function() {
-      var date = event.data.date;
-      var name = $("#name").val().trim();
-      var address = $("#address").val().trim();
-      var contact_number = $("#contact_number").val().trim();
-      var company = $("#company").val().trim();
-      var time = $("#time").val().trim();
-      var ampm = $("#ampm").val();
-      var time = $("#service").val().trim();
-      var day = parseInt($(".active-date").html());
-      // Basic form validation
-      console.log(name,  date, day, address, contact_number, company, time, ampm, service)
-      if(name.length === 0) {
-          $("#name").addClass("error-input");
-      }
-    //   else if(isNaN(count)) {
-    //       $("#count").addClass("error-input");
-    //   }
-      else {
-          $("#dialog").hide(250);
-          console.log("new event");
-          new_event_json(name, date, day, address, contact_number, company, time, ampm, service);
-          date.setDate(day);
-          init_calendar(date);
-      }
-  });
-}
-
+//------------------------------------------------------
+// Append all select tags with corresponding value      |
+//------------------------------------------------------
 function appendScheduleFormsWithVal(event) {
-  // Bring back schedulling related tags
+  // Bring back scheduling related tags
   var row = $(`<div class="row"></div>`)
   var row2 = $(`<div class="row"></div>`)
 
@@ -1021,39 +974,13 @@ function appendScheduleFormsWithVal(event) {
     select2.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
 
-  // select2.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
-
   // Appending all option tag for service2
-
   select3.append(`<option value="none">Select Service</option>`)
   schedule_data["services"].forEach(service => {
     select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
-  // select3.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
-  // Append month
+  // Append months
   select4.append('<option value="1">January</option>')
         .append('<option value="2">February</option>')
         .append('<option value="3">March</option>')
@@ -1066,56 +993,53 @@ function appendScheduleFormsWithVal(event) {
         .append('<option value="10">October</option>')
         .append('<option value="11">November</option>')
         .append('<option value="12">December</option>')
-
-        
-
+  
+  // Code for dynamic days depending on selected month
   var myDate = new Date()
   var numOfDays = new Date(myDate.getFullYear(), event.month, 0).getDate()
   for(let i = 1; i <= numOfDays; i++) {
     select5.append(`<option value="${i}">${i}</option>`)
   }
 
+  // For validation display
   var validationTime = $(`<div id="ampm-invalid" class="all-validations"></div>`)
   var validationService = $(`<div id="service-invalid" class="all-validations"></div>`)
   var validationService2 = $(`<div id="service2-invalid" class="all-validations"></div>`)
 
+  // Appending tags
   form1.append(label1).append(select1).append(validationTime)
   form2.append(label2).append(select2).append(validationService)
   form3.append(label3).append(select3).append(validationService2)
   form4.append(label4).append(select4)
   form5.append(label5).append(select5)
-
   col1.append(form1)
   col2.append(form2)
   col3.append(form3)
   col4.append(form4)
   col5.append(form5)
-
   row.append(col1).append(col2).append(col3)
   row2.append(col4).append(col5).append(col6)
-
   $(".for-schedule").append(row).append(row2)
 
+  // Select all value depending on the patient's schedule and service(s)
   var servicesMap = event.service.map(serv => serv._id)
   $("#ampm").val(event.ampm) 
   if(event.service.length == 1)
-  console.log(event.service.length)
     $("#service").val(servicesMap[0])
   if(event.service.length == 2) {
-    console.log(event.service.length)
     $("#service").val(servicesMap[0])
     $("#service2").val(servicesMap[1])
   }
-  console.log(event.service.length)
-  console.log(event.service[0])
-  console.log(event.service[1])
   $("#month").val(event.month)
   $("#day").val(event.day)
 
 }
 
+//------------------------------------------------------
+// Append all select tags for scheduling               |
+//------------------------------------------------------
 function appendScheduleForms() {
-  // Bring back schedulling related tags
+  // Bring back scheduling related tags
   var row = $(`<div class="row"></div>`)
 
   var col1 = $(`<div class="col-lg-4"></div>`)
@@ -1199,56 +1123,34 @@ function appendScheduleForms() {
   schedule_data["services"].forEach(service => {
     select2.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
-  // select2.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   // Appending all option tag for service2
   select3.append(`<option value="none">Select Service</option>`)
   schedule_data["services"].forEach(service => {
     select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
-  // select3.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
+  // For validation display
   var validationTime = $(`<div id="ampm-invalid" class="all-validations"></div>`)
   var validationService = $(`<div id="service-invalid" class="all-validations"></div>`)
   var validationService2 = $(`<div id="service2-invalid" class="all-validations"></div>`)
 
+  // Append all tags
   form1.append(label1).append(select1).append(validationTime)
   form2.append(label2).append(select2).append(validationService)
   form3.append(label3).append(select3).append(validationService2)
-
   col1.append(form1)
   col2.append(form2)
   col3.append(form3)
-
   row.append(col1).append(col2).append(col3)
-
   $(".for-schedule").append(row)
 }
 
+//------------------------------------------------------
+// Append all select tags for payment of patient        |
+//------------------------------------------------------
 function appendPayment(event) {
-  // Bring back schedulling related tags
+  // Bring back scheduling related tags
   var row = $(`<div class="row"></div>`)
   var row2 = $(`<div class="row"></div>`)
   var row3 = $(`<div class="row"></div>`)
@@ -1334,7 +1236,7 @@ function appendPayment(event) {
   var label2 = $(`<label for="service">Service: </label>`)
   var label3 = $(`<label for="service2">Service2: </label>`)
   
-
+  // For time and service
   var select1 = $(`<select id="ampm" name="ampm" class="form-control form-control-sm"></select>`)
   var select2 = $(`<select id="service" name="service" class="form-control form-control-sm">`)
   var select3 = $(`<select id="service2" name="service2" class="form-control form-control-sm">`)
@@ -1346,14 +1248,13 @@ function appendPayment(event) {
   var medQuantity1 = $('<input type="text" id="medQuantity1" name="medQuantity1" class="form-control form-control-sm" placeholder="Enter quantity">')
   var medPrice1 = $('<input type="text" id="medPrice1" name="medPrice1" class="form-control form-control-sm"  readonly>')
 
-
+  // For medicines
   var medSelectLabel2 = $('<label for="med2">Medicine: </label>')
   var medQuantityLabel2 = $('<label for="medQuantity2">Quantity: </label>')
   var medPriceLabel2 = $('<label for="medPrice2">Price: </label>')
   var medSelect2 = $('<select id="med2" name="med2" class="form-control form-control-sm"></select>')
   var medQuantity2 = $('<input type="text" id="medQuantity2" name="medQuantity2" class="form-control form-control-sm" placeholder="Enter quantity">')
   var medPrice2 = $('<input type="text" id="medPrice2" name="medPrice2" class="form-control form-control-sm"  readonly>')
-
 
   var medSelectLabel3 = $('<label for="med3">Medicine: </label>')
   var medQuantityLabel3 = $('<label for="medQuantity3">Quantity: </label>')
@@ -1362,7 +1263,6 @@ function appendPayment(event) {
   var medQuantity3 = $('<input type="text" id="medQuantity3" name="medQuantity3" class="form-control form-control-sm" placeholder="Enter quantity">')
   var medPrice3 = $('<input type="text" id="medPrice3" name="medPrice3" class="form-control form-control-sm"  readonly>')
 
-
   var medSelectLabel4 = $('<label for="med4">Medicine: </label>')
   var medQuantityLabel4 = $('<label for="medQuantity4">Quantity: </label>')
   var medPriceLabel4 = $('<label for="medPrice4">Price: </label>')
@@ -1370,14 +1270,12 @@ function appendPayment(event) {
   var medQuantity4 = $('<input type="text" id="medQuantity4" name="medQuantity4" class="form-control form-control-sm" placeholder="Enter quantity">')
   var medPrice4 = $('<input type="text" id="medPrice4" name="medPrice4" class="form-control form-control-sm"  readonly>')
 
-
   var medSelectLabel5 = $('<label for="med5">Medicine: </label>')
   var medQuantityLabel5 = $('<label for="medQuantity5">Quantity: </label>')
   var medPriceLabel5 = $('<label for="medPrice5">Price: </label>')
   var medSelect5 = $('<select id="med5" name="med5" class="form-control form-control-sm"></select>')
   var medQuantity5 = $('<input type="text" id="medQuantity5" name="medQuantity5" class="form-control form-control-sm" placeholder="Enter quantity">')
   var medPrice5 = $('<input type="text" id="medPrice5" name="medPrice5" class="form-control form-control-sm"  readonly>')
-
 
   var medSelectLabel6 = $('<label for="med6">Medicine: </label>')
   var medQuantityLabel6 = $('<label for="medQuantity6">Quantity: </label>')
@@ -1453,37 +1351,11 @@ function appendPayment(event) {
     select2.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
 
-  // select2.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
-
   // Appending all option tag for service2
-
   select3.append(`<option value="none">Select Service</option>`)
   schedule_data["services"].forEach(service => {
     select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
-  // select3.append(`<option value="none">Select Service</option>`)
-  //       .append(`<option value="bunot_regular">Bunot(Regular) &#8369;500</option>`)
-  //       .append(`<option value="bunot_odontectomy">Bunot(Odontectomy) &#8369;6000 - &#8369;8000</option>`)
-  //       .append(`<option value="pasta">Pasta(Restoration) &#8369;800</option>`)
-  //       .append(`<option value="linis">Linis(Oral Propelaxis) &#8369;800</option>`)
-  //       .append(`<option value="brace">Brace(Taas Baba) &#8369;45000</option>`)
-  //       .append(`<option value="brace_adjustment">Brace Adjustment &#8369;1000</option>`)
-  //       .append(`<option value="denture_simple">Denture(Simple "3 teeth") &#8369;3500</option>`)
-  //       .append(`<option value="denture_all">Denture(Taas Baba) &#8369;10000</option>`)
-  //       .append(`<option value="root_canal_treatment">Root Canal Treatment &#8369;4000</option>`)
-  //       .append(`<option value="tooth_whitening">Tooth Whitening(7 Sessions "1 week") &#8369;15000</option>`)
-  //       .append(`<option value="retainer_simple">Retainer(Simple "3 teeth") &#8369;3500</option>`)
 
   // Append all medicines
   medSelect1.append(`<option value="none">Select Service</option>`)
@@ -1528,11 +1400,10 @@ function appendPayment(event) {
     } 
   })
 
+  // display validations
   var validationTime = $(`<div id="ampm-invalid" class="all-validations"></div>`)
   var validationService = $(`<div id="service-invalid" class="all-validations"></div>`)
   var validationService2 = $(`<div id="service2-invalid" class="all-validations"></div>`)
-
-
   var validationQ1 = $(`<div id="q1-invalid" class="all-validations"></div>`)
   var validationQ2 = $(`<div id="q2-invalid" class="all-validations"></div>`)
   var validationQ3 = $(`<div id="q3-invalid" class="all-validations"></div>`)
@@ -1540,34 +1411,28 @@ function appendPayment(event) {
   var validationQ5 = $(`<div id="q5-invalid" class="all-validations"></div>`)
   var validationQ6 = $(`<div id="q6-invalid" class="all-validations"></div>`)
 
+  // Append all tags
   form1.append(label1).append(select1).append(validationTime)
   form2.append(label2).append(select2).append(validationService)
   form3.append(label3).append(select3).append(validationService2)
-
   form4.append(medSelectLabel1).append(medSelect1)
   form5.append(medQuantityLabel1).append(medQuantity1).append(validationQ1)
   form6.append(medPriceLabel1).append(medPrice1)
-
   form7.append(medSelectLabel2).append(medSelect2)
   form8.append(medQuantityLabel2).append(medQuantity2).append(validationQ2)
   form9.append(medPriceLabel2).append(medPrice2)
-
   form10.append(medSelectLabel3).append(medSelect3)
   form11.append(medQuantityLabel3).append(medQuantity3).append(validationQ3)
   form12.append(medPriceLabel3).append(medPrice3)
-
   form13.append(medSelectLabel4).append(medSelect4)
   form14.append(medQuantityLabel4).append(medQuantity4).append(validationQ4)
   form15.append(medPriceLabel4).append(medPrice4)
-
   form16.append(medSelectLabel5).append(medSelect5)
   form17.append(medQuantityLabel5).append(medQuantity5).append(validationQ5)
   form18.append(medPriceLabel5).append(medPrice5)
-
   form19.append(medSelectLabel6).append(medSelect6)
   form20.append(medQuantityLabel6).append(medQuantity6).append(validationQ6)
   form21.append(medPriceLabel6).append(medPrice6)
-
   col1.append(form1)
   col2.append(form2)
   col3.append(form3)
@@ -1589,7 +1454,6 @@ function appendPayment(event) {
   col19.append(form19)
   col20.append(form20)
   col21.append(form21)
-
   row.append(col1).append(col2).append(col3)
   row2.append(col4).append(col5).append(col6)
   row3.append(col7).append(col8).append(col9)
@@ -1597,19 +1461,15 @@ function appendPayment(event) {
   row5.append(col13).append(col14).append(col15)
   row6.append(col16).append(col17).append(col18)
   row7.append(col19).append(col20).append(col21)
-
   formServiceTotal.append(labelServiceTotal).append(serviceTotal)
   formMedicineTotal.append(labelMedicineTotal).append(medicineTotal)
   formGrandTotal.append(labelGrandTotal).append(grandTotal)
-
   colServiceTotal3.append(formServiceTotal)
   colMedicineTotal3.append(formMedicineTotal)
   colGrandTotal3.append(formGrandTotal)
-
   rowServiceTotal.append(colServiceTotal1).append(colServiceTotal2).append(colServiceTotal3)
   rowMedicineTotal.append(colMedicineTotal1).append(colMedicineTotal2).append(colMedicineTotal3)
   rowGrandTotal.append(colGrandTotal1).append(colGrandTotal2).append(colGrandTotal3)
-
   $(".for-schedule").append(row)
         .append(rowServiceTotal)
         .append(row2)
@@ -1621,31 +1481,36 @@ function appendPayment(event) {
         .append(rowMedicineTotal)
         .append(rowGrandTotal)
     
-
+  // Total all services
   var servicesMap = event.service.map(serv => serv._id)
   var sTotal = event.service.reduce((acc, serv) => acc + parseInt(serv.price), 0)
-  console.log(sTotal)
+
+  // Set all values based of patient's schedule and services
   $("#ampm").val(event.ampm) 
   if(event.service.length == 1)
-  console.log(event.service.length)
     $("#service").val(servicesMap[0])
     $("#serviceTotal").val(sTotal)
     $("#grandTotal").val(sTotal)
   if(event.service.length == 2) {
-    console.log(event.service.length)
     $("#service").val(servicesMap[0])
     $("#service2").val(servicesMap[1])
   }
-  // $("#month").val(event.month)
-  // $("#day").val(event.day)
+
 }
 
+//------------------------------------------------------
+// Create new patient with schedule                     |
+//------------------------------------------------------
 function new_patient_with_schedule(event) {
 
   $(".for-schedule").empty()
+
+  // Append all select tags for schedule
   appendScheduleForms()
+  // enable forms
   enableForms()
-  removeTextInForms()
+  // Remove texts and classes on inputs
+  removeTextAndClassinInputs()
   
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
@@ -1653,13 +1518,11 @@ function new_patient_with_schedule(event) {
   
   // empty inputs and hide events
   $("#dialog input[type=text]").val('');
-//   $("#dialog input[type=number]").val('');
   $(".events-container").hide(250);
   $("#dialog-2").hide(250);
   $("#dialog").hide(250);
   $("#dialog").show(400);
   $("#flexible-text").text("Register and Schedule Patient")
-
   
   // Event handler for cancel button
   $("#cancel-button").click(function() {
@@ -1670,25 +1533,22 @@ function new_patient_with_schedule(event) {
   });
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
-    
+      // Get all data needed for register and scheduling patient
       var date = event.data.date;
       var name = $("#name").val().trim();
       // Radio button get
-      
       var genderCheck = $("input[type='radio'][name='gender']:checked")
       var gender = genderCheck.length > 0 ? genderCheck.val() : '';
-
       var address = $("#address").val().trim();
       var contact_number = $("#contact_number").val().trim();
-      // var company = $("#company").val().trim();
       var age = $("#age").val().trim();
       var nationality = $("#nationality").val().trim();
       var occupation = $("#occupation").val().trim();
       var reffered_by = $("#referred_by").val().trim();
-
       var chief_complainant = $("#chief_complainant").val().trim();
       var diagnosis = $("#diagnosis").val();
-
+      
+      // Patient details
       var patientDetails = {
         name,
         gender,
@@ -1702,18 +1562,6 @@ function new_patient_with_schedule(event) {
         diagnosis
       }
 
-      // var patientDetails = [
-      //   'name',
-      //   'gender',
-      //   'address',
-      //   'contact_number',
-      //   'age',
-      //   'nationality',
-      //   'occupation',
-      //   'reffered_by',
-      //   'chief_complainant',
-      //   'diagnosis'
-      // ]
 
       // Teeth comment
       var t_11 = $("#t-11").val().trim()
@@ -1830,28 +1678,24 @@ function new_patient_with_schedule(event) {
         t_48,
       }
 
-      // Time
+      // Time, date and services
       var ampm = $("#ampm").val();
       var service = $("#service").val();
       var service2 = $("#service2").val();
       var services = [service, service2]
       var servicesFiltered = []
       var date = new Date()
-
       var day = parseInt($(".active-date").html());
-      // Basic form validation
-      console.log(date, day, ampm, patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions)
-      validationErrors = []
 
       // Validations
       checkValidationsWithSched(name, age, ampm, service, service2)
 
-      
-      
-      // If no errors proceed
+      // If no errors
       if(validationErrors.length === 0) {
 
+        // Check if time is occupied
         var filteredTime = check_time_of_events(day, date.getMonth()+1, date.getFullYear(), ampm)
+        // If time is occupied, alert user
         if(filteredTime.length != 0) {
           $("#ampm").addClass("is-invalid");
           $("#ampm-invalid").addClass("invalid-feedback");
@@ -1859,6 +1703,7 @@ function new_patient_with_schedule(event) {
           validationErrors.push('Time')
         }
 
+        // if time is not occupied
         if(validationErrors.length === 0) {
 
           // Filter services
@@ -1869,10 +1714,12 @@ function new_patient_with_schedule(event) {
           })
 
           $("#dialog").hide(250);
-          console.log("new event");
+          // Call function to register and schedule patient
           new_register_and_schedule_json(date, day, ampm, patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions,servicesFiltered);
           date.setDate(day);
           init_calendar(date);
+
+        // If time is occupied
         } else {
           alert(`Time is already occupied`)
         }
@@ -1883,20 +1730,27 @@ function new_patient_with_schedule(event) {
   });
 }
 
+//------------------------------------------------------
+// Validate forms for registering and updating patient  |
+//------------------------------------------------------
 function checkValidationsForPatient(name, age) {
   validationErrors = []
 
+  // if no name, alert user
   if(name.length == 0) {
     $("#name").addClass("is-invalid");
     $("#name-invalid").addClass("invalid-feedback");
     $("#name-invalid").text("Name is required")
     validationErrors.push('Name')
   } 
+  // if no age, alert user
   if(age.length == 0) {
     $("#age").addClass("is-invalid");
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age is required")
     validationErrors.push('Age')
+
+  // if age is not a number
   } else if (!regexAge.test(age)) {
     $("#age").addClass("is-invalid");
     $("#age-invalid").addClass("invalid-feedback");
@@ -1905,31 +1759,41 @@ function checkValidationsForPatient(name, age) {
   }
 }
 
+//-------------------------------------------------------------
+// Validate form for registering with scheduling of patient    |
+//-------------------------------------------------------------
 function checkValidationsWithSched(name, age, ampm, service, service2) {
   validationErrors = []
-  if(name.length === 0) {
+
+  // if no name, alert user
+  if(name.length == 0) {
     $("#name").addClass("is-invalid");
     $("#name-invalid").addClass("invalid-feedback");
     $("#name-invalid").text("Name is required")
     validationErrors.push('Name')
   } 
+  // if no age, alert user
   if(age.length == 0) {
     $("#age").addClass("is-invalid");
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age is required")
     validationErrors.push('Age')
+
+  // if age is not a number, alert user
   } else if (!regexAge.test(age)) {
     $("#age").addClass("is-invalid");
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age must be numeric")
     validationErrors.push('Age')
   }
+  // if time is none, alert user
   if(ampm === 'none') {
     $("#ampm").addClass("is-invalid");
     $("#ampm-invalid").addClass("invalid-feedback");
     $("#ampm-invalid").text("Please choose time")
     validationErrors.push('Time')
   }
+  // if no service, alert user
   if(service === 'none' && service2 === 'none') {
     $("#service").addClass("is-invalid");
     $("#service-invalid").addClass("invalid-feedback");
@@ -1941,7 +1805,9 @@ function checkValidationsWithSched(name, age, ampm, service, service2) {
   }
 }
 
-// Adds a json event to schedule_data
+//--------------------------------------------------------
+// Call route for registering with schedule of patient    |
+//--------------------------------------------------------
 function new_register_and_schedule_json(date, day, ampm, patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions,services) {
 
   var myServices = []
@@ -1950,6 +1816,7 @@ function new_register_and_schedule_json(date, day, ampm, patientDetails, teethCo
     myServices.push(service)
   })
 
+  // Store all data needed in object
   var newSchedule = {
     "year": date.getFullYear(),
     "month": date.getMonth()+1,
@@ -2016,40 +1883,12 @@ function new_register_and_schedule_json(date, day, ampm, patientDetails, teethCo
     "serviceSimple": myServices
   };
 
-  
-// > for(let i = 0; i < patientDetails.length; i++){console.log(`${patientDetails[i]}: patientDetails.${patientDetails[i]},`)}
-
   $.ajax({
     type: 'POST',
     data: JSON.stringify(newSchedule),
     url: `${host}/schedule/add-schedule-with-patient`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
-
-//   .done(function( response ) {
-
-//     // Check for successful (blank) response
-//     if (response.msg === '') {
-
-//       // Clear the form inputs
-//       $('#addUser fieldset input').val('');
-
-//       // Update the table
-//       populateTable();
-
-//     }
-//     else {
-
-//       // If something goes wrong, alert the error message that our service returned
-//       alert('Error: ' + response.msg);
-
-//     }
-//   });
   .then(data => {
     location.reload(true)      
   })
@@ -2058,17 +1897,15 @@ function new_register_and_schedule_json(date, day, ampm, patientDetails, teethCo
   location.reload(true)
 }
 
-// Display all events of the selected date in card views 
+//------------------------------------------
+// Display all events on specific day       |
+//------------------------------------------
 function show_events(events, month, day) {
   // Clear the dates container
   $(".events-container").empty();
-  $(".events-container").show(400);
-  console.log(schedule_data["schedules"], "saddd");
-  console.log(schedule_data["patients"], "raaaaa");
-  
-  
+  $(".events-container").show(400);  
 
-  // If there are no events for this date, notify the user
+  // If there are no events for this date, Display it
   if(events.length===0) {
       var event_card = $("<div class='event-card'></div>");
       var event_name = $("<div class='event-name'>There are no schedule for "+month+" "+day+".</div>");
@@ -2076,96 +1913,115 @@ function show_events(events, month, day) {
       $(event_card).append(event_name); 
       $(".events-container").append(event_card);
   }
+  // If there are events
   else {
-      // Go through and add each event as a card to the events container
-      events.forEach(event => {
-        var myContainer = $("<div class='container'></div>");
-        var event_card = $("<div class='card text-white bg-primary m-4'></div>");
-        var event_card_header = $(`<div class='card-header'>Name: ${event.patient.name}</div>`);
-        //handle time
-        var a = event.ampm.split('-')
-        var to_hours;
-        var to_minutes = a[1];
-        var to_ampm;
-        to_ampm = ((parseInt(a[0]) + numOfHours ) >= 12) ? 'PM' : 'AM'
-        if((parseInt(a[0]) + numOfHours ) == 13) {
-          to_hours = '1'
-        } else if ((parseInt(a[0]) + numOfHours ) == 14) {
-          to_hours = '2'
-        } else {
-          to_hours = parseInt(a[0]) + numOfHours
-        }
-        // Handle services
-        var services = event.service.map(serv => `${serv.name}`)
-        var event_card_body = $("<div class='card-body'></div>");
+    // Go through and add each event as a card to the events container
+    events.forEach(event => {
+      // Set all tags needed
+      var myContainer = $("<div class='container'></div>");
+      // Setup card color blue
+      var event_card = $("<div class='card text-white bg-primary m-4'></div>");
+      // Setup the name of patient
+      var event_card_header = $(`<div class='card-header'>Name: ${event.patient.name}</div>`);
+      //handle time
+      var a = event.ampm.split('-')
+      var to_hours;
+      var to_minutes = a[1];
+      var to_ampm;
+      // Identify if AM or PM depending in "numOfHours"
+      to_ampm = ((parseInt(a[0]) + numOfHours ) >= 12) ? 'PM' : 'AM'
+      // Hours depending on "numOfHours"
+      if((parseInt(a[0]) + numOfHours ) == 13) {
+        to_hours = '1'
+      } else if ((parseInt(a[0]) + numOfHours ) == 14) {
+        to_hours = '2'
+      } else {
+        to_hours = parseInt(a[0]) + numOfHours
+      }
+      // Handle services
+      var services = event.service.map(serv => `${serv.name}`)
+      var event_card_body = $("<div class='card-body'></div>");
+      // Setup time of schedule
+      var event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm}</h4>`);
+      // Setup the contact number of patient
+      var event_card_contact_number = $(`<p class='card-text'>Contact Number: ${event.patient.contact_number}</p>`);
+      // Setup the age of patient
+      var event_card_time = $(`<p class='card-text'>Age: ${event.patient.age}</p>`);
+      // Setup all services 
+      var event_card_services = $(`<p class='card-text'>Services: ${services}</p>`);
 
-        var event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm}</h4>`);
-        var event_card_contact_number = $(`<p class='card-text'>Contact Number: ${event.patient.contact_number}</p>`);
-        var event_card_time = $(`<p class='card-text'>Age: ${event.patient.age}</p>`);
-        var event_card_services = $(`<p class='card-text'>Services: ${services}</p>`);
-        var event_card_payment =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-success" id="${event._id}-payment-schedule" href="#">Payment</strong></div>`);
-        var event_card_edit =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-warning" id="${event._id}-edit-schedule" href="#">Edit Schedule</strong></div>`);
-        var event_card_cancel = $(`<div class='card-text'><strong><a class="btn btn-sm btn-danger" id="${event._id}-cancel" href="#">Cancel</strong></div>`);
+      // Setup buttons
+      var event_card_payment =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-success" id="${event._id}-payment-schedule" href="#">Payment</strong></div>`);
+      var event_card_edit =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-warning" id="${event._id}-edit-schedule" href="#">Edit Schedule</strong></div>`);
+      var event_card_cancel = $(`<div class='card-text'><strong><a class="btn btn-sm btn-danger" id="${event._id}-cancel" href="#">Cancel</strong></div>`);
 
-        var medTotal = event.medicine_total != null ? event.medicine_total : 0;
+      // Set the total cost of medicine based on payment
+      var medTotal = event.medicine_total != null ? event.medicine_total : 0;
 
-        if(event.cancelled != true && event.done == true){
-          event_card = $("<div class='card text-white bg-success m-4'></div>");
-          event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Done</strong></h4>`);
-          var serviceTotal = $(`<p class='card-text'>Service Total: &#8369 ${event.service_total}</p>`);
-          var medicineTotal = $(`<p class='card-text'>Medicine Total: &#8369 ${medTotal}</p>`);
-          var grandTotal = $(`<p class='card-text'>Grand Total: &#8369 ${event.grand_total}</p>`);
-          var moreInfo =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-secondary" href="/payment/search-by-schedule/${event._id}">More info</strong></div>`);
+      // Append this schedule if its done
+      if(event.cancelled != true && event.done == true){
+        // Setup all tags needed
+        // Setup color green card
+        event_card = $("<div class='card text-white bg-success m-4'></div>");
+        // Display time
+        event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Done</strong></h4>`);
+        // Setup total cost of services
+        var serviceTotal = $(`<p class='card-text'>Service Total: &#8369 ${event.service_total}</p>`);
+        // Setup total of medicine
+        var medicineTotal = $(`<p class='card-text'>Medicine Total: &#8369 ${medTotal}</p>`);
+        // Setup the grand total
+        var grandTotal = $(`<p class='card-text'>Grand Total: &#8369 ${event.grand_total}</p>`);
+        var moreInfo =  $(`<div class='card-text mb-3'><strong><a class="btn btn-sm btn-secondary" target="_blank" href="/payment/search-by-schedule/${event._id}">More info</strong></div>`);
 
-          $(event_card_body).append(event_card_title).append(event_card_contact_number).append(serviceTotal).append(medicineTotal).append(grandTotal).append(moreInfo);
-          $(event_card).append(event_card_header);
-          $(event_card).append(event_card_body);
-          $(myContainer).append(event_card);
-          $(".events-container").append(myContainer)
-        }else if(event.cancelled != true) {
-          $(event_card_body).append(event_card_title).append(event_card_contact_number).append(event_card_time).append(event_card_services).append(event_card_payment).append(event_card_edit).append(event_card_cancel);
-          $(event_card).append(event_card_header);
-          $(event_card).append(event_card_body);
-          $(myContainer).append(event_card);
-          $(".events-container").append(myContainer)
-          $(`#${event._id}-payment-schedule`).click({id: event._id, patient: event.patient}, payment_schedule);
-          $(`#${event._id}-edit-schedule`).click({id: event._id, patient: event.patient}, edit_schedule);
-          $(`#${event._id}-cancel`).click({id: event._id}, cancel_schedule);
-        } else {
-          event_card = $("<div class='card text-white bg-danger m-4'></div>");
-          event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Cancelled</strong></h4>`);
+        // Append all tags
+        $(event_card_body).append(event_card_title).append(event_card_contact_number).append(serviceTotal).append(medicineTotal).append(grandTotal).append(moreInfo);
+        $(event_card).append(event_card_header);
+        $(event_card).append(event_card_body);
+        $(myContainer).append(event_card);
+        $(".events-container").append(myContainer)
 
-          $(event_card_body).append(event_card_title).append(event_card_time).append(event_card_services);
-          $(event_card).append(event_card_header);
-          $(event_card).append(event_card_body);
-          $(myContainer).append(event_card);
-          $(".events-container").append(myContainer)
+      // Append this schedule if not yet done
+      }else if(event.cancelled != true) {
+        // Append all tags
+        $(event_card_body).append(event_card_title).append(event_card_contact_number).append(event_card_time).append(event_card_services).append(event_card_payment).append(event_card_edit).append(event_card_cancel);
+        $(event_card).append(event_card_header);
+        $(event_card).append(event_card_body);
+        $(myContainer).append(event_card);
+        $(".events-container").append(myContainer)
 
-        }
-      })
-      // for(var i=0; i<events.length; i++) {
-      //     var event_card = $("<div class='event-card'></div>");
-      //     var event_name = $("<div class='event-name'><strong>Name: </strong>"+events[i]["name"]+":</div>");
-      //     var event_contact_number = $("<div class='event-count'><strong>Contact Number: </strong>"+events[i]["contact_number"]+"</div>");
-      //     if(events[i]["cancelled"]===true) {
-      //         $(event_card).css({
-      //             "border-left": "10px solid #FF1744"
-      //         });
-      //         event_count = $("<div class='event-cancelled'>Cancelled</div>");
-      //     }
-      //     $(event_card).append(event_name).append(event_count);
-      //     $(".events-container").append(event_card);
-      // }
+        // Setup button for click events
+        $(`#${event._id}-payment-schedule`).click({id: event._id, patient: event.patient}, payment_schedule);
+        $(`#${event._id}-edit-schedule`).click({id: event._id, patient: event.patient}, update_schedule);
+        $(`#${event._id}-cancel`).click({id: event._id}, cancel_schedule);
+
+      // Append this schedule if cancelled
+      } else {
+        // Setup all tags
+        event_card = $("<div class='card text-white bg-danger m-4'></div>");
+        event_card_title = $(`<h4 class='card-title'>Time: ${a[0]}:${a[1]} ${a[2]} - ${to_hours}:${to_minutes} ${to_ampm} <strong>Cancelled</strong></h4>`);
+
+        // Append all tags
+        $(event_card_body).append(event_card_title).append(event_card_time).append(event_card_services);
+        $(event_card).append(event_card_header);
+        $(event_card).append(event_card_body);
+        $(myContainer).append(event_card);
+        $(".events-container").append(myContainer)
+
+      }
+    })
   }
 }
 
+//--------------------------------
+// Computes grand total           |
+//--------------------------------
 function computeGrandTotal() {
   
   var gTotal = parseInt($("#serviceTotal").val())
   var computedGTotal = gTotal
   var mTotal = 0
 
-  computedGTotal = parseInt($("#serviceTotal").val())
+  computedGTotal = parseInt($("#serviceTotal").val()) 
   if($("#medPrice1").val() != '') {
     computedGTotal += parseInt($("#medPrice1").val())
     mTotal += parseInt($("#medPrice1").val())
@@ -2195,54 +2051,91 @@ function computeGrandTotal() {
   $('#medicineTotal').val(mTotal)
 }
 
-function paymentValidations() {
+//--------------------------------
+// Handles actions in payment     |
+//--------------------------------
+function paymentActions() {
 
+  // Set function on #med when changed
   $("#med1").change(function() {
+    // Get value of #med
     var s = $("#med1").val()
-    console.log(s)
+    // if #med is not equal to 'none'
     if(s != 'none') {
+      // Select and store the medicine based on id 
       var selectedMed = schedule_data.inventory.filter(med => med._id == s)
       selectedMed = selectedMed[0]
+      // Get the value of #medQuantity
       var q = $("#medQuantity1").val()
+      // if #medQuantity is not equal to ''
       if(q != '') {
+        // Compute for the price medicine (Price of medicine * quantity of medicine entered)
         var price = parseInt(selectedMed.price) * parseInt(q);
+        // Display the price
         $("#medPrice1").val(price)
+        // Compute grand total with the price of medicine
         computeGrandTotal()
       } else {
+        // Set the price of medicine to ''
         $("#medPrice1").val('')
+        // Compute for grand total
         computeGrandTotal()
       }
+    // if #med is equal to 'none'
     } else {
       computeGrandTotal()
     }
   })
 
+  // Set function when #medQuantity is filled by user
   $("#medQuantity1").keyup(function () {
+    // Get the quantity of #medQuantity
     var q = $("#medQuantity1").val()
+    // Initialize regex to detect numbers only
     var rN = /[0-9]/
-    console.log(q)
-    console.log(rN.test(q[q.length-1]))
+    // if #medQuantity is not empty
     if(q != '') {
+      // Test the character input of the user if number
+      // if it is number
       if(rN.test(q[q.length-1])) {
+        // Get the #medQuantity value
         q = $("#medQuantity1").val()
+        // Check #medQuantity again if not empty
         if(q != '') {
+          // Get the value of #med
           var s = $("#med1").val()
+          // if the value of #med is 'none'
           if(s != 'none') {
+            // Select the medicine based on id
             var selectedMed = schedule_data.inventory.filter(med => med._id == s)
             selectedMed = selectedMed[0]
+            // Compute for the price of medicine (Price of each medicine * Quantity of medicine entered my user)
             var price = parseInt(selectedMed.price) * parseInt(q);
+            // Display the the computed price of medicine
             $("#medPrice1").val(price)
+            // Compute the grand total with computed price of medicine
             computeGrandTotal()
           }
+
+        // if #medQuantity is empty
         } else {
+          // Set #medprice to ''
           $("#medPrice1").val('')
+          // Compute Grand total
           computeGrandTotal()
         }
+
+      // if not number
       } else {
+        // Remove the characters that are not number
         $("#medQuantity1").val(q.slice(0, q.length - 1))
       }
+
+    // if #medQuantity is empty
     } else {
+      // Set #medPrice to ''
       $("#medPrice1").val('')
+      // Compute grand total
       computeGrandTotal()
     }
   })
@@ -2503,12 +2396,19 @@ function paymentValidations() {
   })
 }
 
+//--------------------------------
+// Handles payment of patient     |
+//--------------------------------
 function payment_schedule(event) {
+
+  // Empty the .for-schedule
   $(".for-schedule").empty()
-  removeTextInForms()
+  
+  // Remove text and classes in inputs
+  removeTextAndClassinInputs()
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
-  return;
+    return;
   // remove red error input on click
   $("input").click(function(){
     $(this).removeClass("error-input");
@@ -2521,15 +2421,19 @@ function payment_schedule(event) {
   $("#dialog").hide(250); 
   $("#dialog").show(400);
 
-  var editThisSchedule = schedule_data.schedules.filter(schedule => schedule._id === event.data.id)
-  editThisSchedule = editThisSchedule[0]
-  console.log(editThisSchedule)
-  appendPayment(editThisSchedule)
+  // Choose schedule based on id
+  var filterSched = schedule_data.schedules.filter(schedule => schedule._id === event.data.id)
+  filterSched = filterSched[0]
+  // Append Select tags depending on 'filterSched'
+  appendPayment(filterSched)
 
-  var editThisPatient = schedule_data.patients.filter(patient => patient._id == event.data.patient._id)
-  editThisPatient = editThisPatient[0]
-  $("#flexible-text").text(`Payment for ${editThisPatient.name}`)
-  fillupForm(editThisPatient)
+  // Choose patient based on id
+  var thisPatient = schedule_data.patients.filter(patient => patient._id == event.data.patient._id)
+  thisPatient = thisPatient[0]
+  $("#flexible-text").text(`Payment for ${thisPatient.name}`)
+
+  // Fill up forms depending on 'thisPatient'
+  fillupForm(thisPatient)
 
   // Disable forms
   disableForms()
@@ -2551,7 +2455,8 @@ function payment_schedule(event) {
   $("#medPrice5").prop("disabled", false)
   $("#medPrice6").prop("disabled", false)
 
-  paymentValidations()
+  // Handles all actions in payment
+  paymentActions()
 
   // Event handler for cancel button
   $("#cancel-button").click(function() {
@@ -2562,16 +2467,15 @@ function payment_schedule(event) {
   });
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
+    // Get all data needed  for payment
     var date = new Date()
-    console.log('click me')
-    // Time
     var ampm = $("#ampm").val();
     var month = $("#month").val();
     var dayChoose = $("#day").val();
     var service = $("#service").val();
     var service2 = $("#service2").val();
     var services = [service, service2]
-    var schedID = editThisSchedule._id
+    var schedID = filterSched._id 
     var patientID = event.data.patient._id
     var servicesFiltered = []
     var medicineFiltered = []
@@ -2580,38 +2484,83 @@ function payment_schedule(event) {
     var mTotal = parseInt($('#medicineTotal').val())
     var gTotal = parseInt($('#grandTotal').val())
 
+    // Validate services and schedule
     checkValidationsForSchedule(ampm, service, service2)
  
+    // Remove classes in #medQuantity and set the text to ""
+    for(let i = 1; i <= 6; i++) {
+      $(`#medQuantity${i}`).click(function(){
+        $(`#medQuantity${i}`).removeClass("is-invalid");
+        $(`#q${i}-invalid`).text("");
+      })
+    }
+
+    // If no errors
     if(validationErrors.length === 0) {
 
-      // Filter services
-      services.forEach(serv => {
-        if(serv.value != 'none')
-        servicesFiltered.push(serv)
-      })
-
-      for(let i = 1; i <= 6; i++) {
-        if($(`#medPrice${i}`).val() != '') {
-          let medObj = {}
-          console.log($(`#medPrice${i}`).val())
-          medObj._id = $(`#med${i}`).val()
-          medObj.text = $(`#med${i} option:selected`).text()
-          medObj.price = parseInt($(`#medPrice${i}`).val())
-          medObj.quantity = parseInt($(`#medQuantity${i}`).val())
-          medicineFiltered.push(medObj)
+      // Validate if quantity entered is less than actual quantity of product
+      for(let i = 1; i <=6; i++) {
+        var p = $(`#medPrice${i}`).val()
+        if(p != '') {
+          var q = $(`#medQuantity${i}`).val()
+          var m = $(`#med${i}`).val()
+          schedule_data.inventory.forEach(med => {
+            if(med._id == m) {
+              if(med.quantity < parseInt(q)) {
+                $(`#medQuantity${i}`).addClass("is-invalid")
+                $(`#q${i}-invalid`).addClass("invalid-feedback");
+                $(`#q${i}-invalid`).text(`${med.name} has only ${med.quantity} pc(s)`);
+                validationErrors.push(`${med.name} is not enough `)
+              }
+              return;
+            }
+          })
         }
       }
-      console.log(medicineFiltered)
-      $("#dialog").hide(300);
-      new_payment_json(date.getFullYear(), date.getMonth() + 1, day, ampm, servicesFiltered, medicineFiltered, patientID, schedID, sTotal, mTotal, gTotal);
-      
+
+      // if no errors
+      if(validationErrors.length === 0) {
+        // Filter services
+        services.forEach(serv => { 
+          if(serv.value != 'none')
+          servicesFiltered.push(serv)
+        })
+
+        // Store in 'medicineFiltered' all the valid select tags of medicines
+        for(let i = 1; i <= 6; i++) {
+          if($(`#medPrice${i}`).val() != '') {
+            let medObj = {}
+            console.log($(`#medPrice${i}`).val())
+            medObj._id = $(`#med${i}`).val()
+            medObj.text = $(`#med${i} option:selected`).text()
+            medObj.price = parseInt($(`#medPrice${i}`).val())
+            medObj.quantity = parseInt($(`#medQuantity${i}`).val())
+            medicineFiltered.push(medObj)
+          }
+        }
+
+        $("#dialog").hide(300);
+        // Call a function to handle payment
+        new_payment_json(date.getFullYear(), date.getMonth() + 1, day, ampm, servicesFiltered, medicineFiltered, patientID, schedID, sTotal, mTotal, gTotal);
+
+      // Alert user for errors
+      } else {
+        alert(`${validationErrors}`)
+      }
+
+    // Alert users for errors
     } else {
       alert(`Please check your inputs in ${validationErrors}`)
     }
   });
 }
 
+//----------------------------------
+// Call route to handle payment     |
+//----------------------------------
 function new_payment_json(year, month, day,  ampm, servicesFiltered, medicineFiltered, patientID, schedID, sTotal, mTotal, gTotal) {
+
+  // Store all data needed on a single object
   var newPayment = {
     "year": year,
     "month": month,
@@ -2630,12 +2579,7 @@ function new_payment_json(year, month, day,  ampm, servicesFiltered, medicineFil
     type: 'POST',
     data: JSON.stringify(newPayment),
     url: `${host}/payment/add-payment`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
   .then(data => {
     location.reload(true)      
@@ -2645,14 +2589,19 @@ function new_payment_json(year, month, day,  ampm, servicesFiltered, medicineFil
   location.reload(true)
 }
 
+//-----------------------------------------------------
+// Validates forms of adding and updating schedule     |
+//-----------------------------------------------------
 function checkValidationsForSchedule(ampm, service, service2) {
   validationErrors = []
+  // if time is 'none', alert user
   if(ampm === 'none') {
     $("#ampm").addClass("is-invalid");
     $("#ampm-invalid").addClass("invalid-feedback");
     $("#ampm-invalid").text("Please choose time")
     validationErrors.push('Time')
   }
+  // if no services, alert user
   if(service === 'none' && service2 === 'none') {
     $("#service").addClass("is-invalid");
     $("#service-invalid").addClass("invalid-feedback");
@@ -2664,34 +2613,39 @@ function checkValidationsForSchedule(ampm, service, service2) {
   }
 }
 
-function edit_schedule(event) {
+//----------------------------------
+// Handles on updating schedule     |
+//----------------------------------
+function update_schedule(event) {
 
+  // Clear for-schedule
   $(".for-schedule").empty()
-  removeTextInForms()
+  // Remove text and classes of inputs
+  removeTextAndClassinInputs()
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
-  return;
+    return;
   // remove red error input on click
   $("input").click(function(){
     $(this).removeClass("error-input");
   })
   // empty inputs and hide events
   $("#dialog input[type=text]").val('');
-  //   $("#dialog input[type=number]").val('');
   $(".events-container").hide(250);
   $("#dialog-2").hide(250);
   $("#dialog").hide(250);
   $("#dialog").show(400);
 
-  var editThisSchedule = schedule_data.schedules.filter(schedule => schedule._id === event.data.id)
-  editThisSchedule = editThisSchedule[0]
-  console.log(editThisSchedule)
-  appendScheduleFormsWithVal(editThisSchedule)
+  // Filter Schedule based on id
+  var filterSched = schedule_data.schedules.filter(schedule => schedule._id === event.data.id)
+  filterSched = filterSched[0]
+  appendScheduleFormsWithVal(filterSched)
 
-  var editThisPatient = schedule_data.patients.filter(patient => patient._id == event.data.patient._id)
-  editThisPatient = editThisPatient[0]
-  $("#flexible-text").text(`Reschedule ${editThisPatient.name}`)
-  fillupForm(editThisPatient)
+  // Filter Patient based on id
+  var thisPatient = schedule_data.patients.filter(patient => patient._id == event.data.patient._id)
+  thisPatient = thisPatient[0]
+  $("#flexible-text").text(`Reschedule ${thisPatient.name}`)
+  fillupForm(thisPatient)
 
   // Disable forms
   disableForms()
@@ -2715,23 +2669,26 @@ function edit_schedule(event) {
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
     var date = event.data.date;
-    // Time
+    // Get all data needed for updating schedule
     var ampm = $("#ampm").val();
     var month = parseInt($("#month").val());
     var dayChoose = parseInt($("#day").val());
     var service = $("#service").val();
     var service2 = $("#service2").val();
     var services = [service, service2]
-    var schedID = editThisSchedule._id
+    var schedID = filterSched._id
     var patientID = event.data.patient._id
     var day = parseInt($(".active-date").html());
     var date = new Date()
     var servicesFiltered = []
 
+    // Validate inputs in time and services
     checkValidationsForSchedule(ampm, service, service2)
  
+    // If no error
     if(validationErrors.length == 0) {
-      console.log(ampm)
+      
+      // Check if time is occupied
       var filteredTime = check_time_of_events_from_edit(dayChoose, month, date.getFullYear(), ampm, schedID)
       if(filteredTime.length != 0) {
         $("#ampm").addClass("is-invalid");
@@ -2739,9 +2696,7 @@ function edit_schedule(event) {
         $("#ampm-invalid").text("Time is already occupied")
         validationErrors.push('Time')
       }
-
-      console.log(filteredTime)
-      
+      // If time is not occupied      
       if(validationErrors.length == 0) {
 
         // Filter services
@@ -2751,27 +2706,34 @@ function edit_schedule(event) {
           }
         })
 
-        // $("#dialog").hide(250);
-        // console.log("new event");
-        // update_schedule_json(month, dayChoose, ampm, servicesFiltered, patientID, schedID);
-        // date.setDate(day);
-        // init_calendar(date);
+        $("#dialog").hide(250);
+        // Call function that handles updating schedule
+        update_schedule_json(month, dayChoose, ampm, servicesFiltered, patientID, schedID);
+        date.setDate(day);
+        init_calendar(date);
+      
+      // Alert user if time is occupied
       } else {
         alert(`Time is already occupied`)
       }
+
+    // Alert user for erros
     } else {
       alert(`Please check your inputs in ${validationErrors}`)
     }
   });
 }
 
-// Update Schedule
+//----------------------------------
+// Call route to update schedule    |
+//----------------------------------
 function update_schedule_json(month, day, ampm, services, patientID, schedID){
   var myServices = []
   services.forEach(service => {
     myServices.push(service)
   })
 
+  // Store all data needed in 1 object
   var updateSchedule = {
     // "year": date.getFullYear(),
     "month": month,
@@ -2788,12 +2750,7 @@ function update_schedule_json(month, day, ampm, services, patientID, schedID){
     type: 'POST',
     data: JSON.stringify(updateSchedule),
     url: `${host}/schedule/edit-schedule`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
   .then(data => {
     location.reload(true)      
@@ -2803,11 +2760,14 @@ function update_schedule_json(month, day, ampm, services, patientID, schedID){
   location.reload(true)
 }
 
-// Cancel schedule
+//----------------------------------
+// Call route to cancel schedule    |
+//----------------------------------
 function cancel_schedule(event) { 
   const id = event.data.id
   var data = {}
   data.id = id
+  // Prompt user for confirmation of cancelling schedule
   if(confirm('Do you really want to cancel this schedule ?')){
     $.ajax({
       type: 'POST',
@@ -2823,7 +2783,9 @@ function cancel_schedule(event) {
   }
 }
 
-// Checks if a specific date has any events
+///-----------------------------------------
+// Check if specific date have schedule     |
+//------------------------------------------
 function check_events(day, month, year) {
   var events = [];
   for(var i=0; i<schedule_data["schedules"].length; i++) {
@@ -2836,7 +2798,9 @@ function check_events(day, month, year) {
   return events;
 }
 
-// check if time is already occupied
+//----------------------------------
+// Check if time is occupied        |
+//----------------------------------
 function check_time_of_events(day, month, year, ampm) {
 
   var currArr = ampm.split('-')
@@ -2862,12 +2826,10 @@ function check_time_of_events(day, month, year, ampm) {
 
       if(currTime >= schedTime && currTime <= schedTimeTo) {
         console.log(currTime,schedTime, currTime, schedTimeTo)
-        console.log('aaa')
         return schedTime
       }
       if (currTimeTo >= schedTime && currTimeTo <= schedTimeTo) {
         console.log(currTimeTo,schedTime, currTimeTo, schedTimeTo)
-        console.log('bbb')
         return schedTime
       }
     }
@@ -2876,7 +2838,9 @@ function check_time_of_events(day, month, year, ampm) {
   return filteredTime
 }
 
-// check if time is already occupied in edit
+//------------------------------------------------------
+// Check if time is occupied when updating schedule     |
+//------------------------------------------------------
 function check_time_of_events_from_edit(day, month, year, ampm, schedID) {
 
   var currArr = ampm.split('-')
@@ -2918,47 +2882,14 @@ function check_time_of_events_from_edit(day, month, year, ampm, schedID) {
   return filteredTime
 }
 
-
-
-function retrieve_events(day, month, year) {
-  $.ajax({
-    url: `${host}/schedule/get-schedule-day/${year}/${month}/${day}`,
-    type: "GET",
-    dataType: "json",
-    success: function (data) {
-        data.forEach(oneData => {
-          schedule_data["schedules"].push(oneData)
-        })
-    },
-    error: function (error) {
-        console.log(`Error ${error}`);
-    }
-  })
-}
-
-const months = [ 
-  "January", 
-  "February", 
-  "March", 
-  "April", 
-  "May", 
-  "June", 
-  "July", 
-  "August", 
-  "September", 
-  "October", 
-  "November", 
-  "December" 
-];  
-
-
-
-// Register Patient
+//----------------------------------
+// Register new patient             |
+//----------------------------------
 function new_patient(event) {
 
   $(".for-schedule").empty()
   enableForms()
-  removeTextInForms()
+  removeTextAndClassinInputs()
 
   // if a date isn't selected then do nothing
   if($(".active-date").length===0)
@@ -2988,15 +2919,14 @@ function new_patient(event) {
 
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
+      // Get all data needed for registration of patient
       var date = event.data.date;
       var name = $("#name").val().trim();
       // Radio button get
       var genderCheck = $("input[type='radio'][name='gender']:checked")
       var gender = genderCheck.length > 0 ? genderCheck.val() : '';
-
       var address = $("#address").val().trim();
       var contact_number = $("#contact_number").val().trim();
-      // var company = $("#company").val().trim();
       var age = $("#age").val().trim();
       var nationality = $("#nationality").val().trim();
       var occupation = $("#occupation").val().trim();
@@ -3017,19 +2947,6 @@ function new_patient(event) {
         chief_complainant,
         diagnosis
       }
-
-      // var patientDetails = [
-      //   'name',
-      //   'gender',
-      //   'address',
-      //   'contact_number',
-      //   'age',
-      //   'nationality',
-      //   'occupation',
-      //   'reffered_by',
-      //   'chief_complainant',
-      //   'diagnosis'
-      // ]
 
       // Teeth comment
       var t_11 = $("#t-11").val().trim()
@@ -3146,14 +3063,18 @@ function new_patient(event) {
         t_48,
       }
 
+      // Check validations for patient form
       checkValidationsForPatient(name, age)
 
+      // if no errors
       if(validationErrors.length == 0) {
         $("#dialog").hide(250);
-        console.log("new event");
+        // Call a function to register patient
         new_register_json(patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions);
         date.setDate(day);
         init_calendar(date);
+
+      // Alert user for errors
       } else {
         alert(`Please check your inputs in ${validationErrors}`)
       }
@@ -3161,9 +3082,12 @@ function new_patient(event) {
   });
 }
 
-// Adds a json event to schedule_data
+//----------------------------------
+// Call route to add patient        |
+//----------------------------------
 function new_register_json(patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions) {
 
+  // Store all data in one object
   var newPatient = {
     // Patient details
     "name": patientDetails.name,
@@ -3229,12 +3153,7 @@ function new_register_json(patientDetails, teethComments, medicalHistory, treatm
     type: 'POST',
     data: JSON.stringify(newPatient),
     url: `${host}/patient/add-patient`,
-    contentType: 'application/json',
-    success: function(data) {
-      console.log('success');
-      console.log(JSON.stringify(data));
-      location.reload(true)
-    }
+    contentType: 'application/json'
   })
   .then(data => {
     location.reload(true)      
