@@ -3,12 +3,12 @@ const host = 'http://localhost:3000';
 
 // Showcase Host
 // const host = 'https://stormy-savannah-61307.herokuapp.com'
- 
+
 // Global Variables
 const numOfHours = 1
 const regexAge = /^[0-9]*$/
 var validationErrors = []
-const months = [ 
+const months = [
   "January", 
   "February", 
   "March", 
@@ -22,7 +22,6 @@ const months = [
   "November", 
   "December" 
 ];  
-
 
 
 // All data loaded here
@@ -49,12 +48,12 @@ $(document).ready(function(){
   $("#add-schedule").click({date: date}, new_schedule);
   $("#add-patient").click({date: date}, new_patient);
   $("#search-patient").keyup({date: date}, search_patient)
+
   // Set current month as active
   $(".months-row").children().eq(date.getMonth()).addClass("active-month");
 
   // Load all data for this page
   init_events()
-
 
   init_calendar(date)
 
@@ -72,17 +71,12 @@ $(document).ready(function(){
 });
 
 
-// function pause(milliseconds) {
-// 	var dt = new Date();
-// 	while ((new Date()) - dt <= milliseconds) { /* Do nothing */ }
-// }
-
 //------------------------------------------------------
 // Get all data needed and load it in "schedule_data"   |
 //------------------------------------------------------
 function init_events() {
   $.ajax({
-    url: `${host}/schedule/initial-load`,
+    url: `${host}/schedule/initial-load`, 
     type: "GET",
     dataType: "json"
   })
@@ -326,6 +320,10 @@ function removeTextAndClassinInputs() {
   $("#name").click(function(){
     $("#name").removeClass("is-invalid");
     $("#name-invalid").text("");
+  })
+  $("#contact_number").click(function(){
+    $("#contact_number").removeClass("is-invalid");
+    $("#contact_number-invalid").text("");
   })
   $("#age").click(function(){
     $("#age").removeClass("is-invalid");
@@ -613,7 +611,7 @@ function update_patient(event) {
     }
 
     // Check validations
-    checkValidationsForPatient(name, age)
+    checkValidationsForPatient(name, age, contact_number)
 
     // If no error
     if(validationErrors.length === 0) {
@@ -787,18 +785,22 @@ function schedule_patient(event) {
     var date = event.data.date;
     // Get all forms needed for scheduling this patient
     var ampm = $("#ampm").val();
+    // var duration = $("#duration").val();
     var service = $("#service").val();
     var service2 = $("#service2").val();
+    // var service3 = $("#service3").val();
+    // var service4 = $("#service4").val();
     var services = [service, service2]
     var patientID = event.data.id
     var date = new Date()
     var day = parseInt($(".active-date").html());
 
     // Validate data for scheduling
+    // checkValidationsForSchedule(ampm, duration, service, service2, service3, service4)
     checkValidationsForSchedule(ampm, service, service2)
 
     // If no error
-    if(validationErrors.length == 0) {
+    if (validationErrors.length == 0) {
 
       // Check if time is occupied
       var filteredTime = check_time_of_events(day, date.getMonth()+1, date.getFullYear(), ampm)
@@ -1045,18 +1047,30 @@ function appendScheduleForms() {
   var col1 = $(`<div class="col-lg-4"></div>`)
   var col2 = $(`<div class="col-lg-4"></div>`)
   var col3 = $(`<div class="col-lg-4"></div>`)
+  var col4 = $(`<div class="col-lg-4"></div>`)
+  var col5 = $(`<div class="col-lg-4"></div>`)
+  var col6 = $(`<div class="col-lg-4"></div>`)
 
   var form1 = $(`<div class="form-group"></div>`)
   var form2 = $(`<div class="form-group"></div>`)
   var form3 = $(`<div class="form-group"></div>`)
+  var form4 = $(`<div class="form-group"></div>`)
+  var form5 = $(`<div class="form-group"></div>`)
+  var form6 = $(`<div class="form-group"></div>`)
 
   var label1 = $(`<label for="ampm">Time: </label>`)
   var label2 = $(`<label for="service">Service: </label>`)
-  var label3 = $(`<label for="service2">Service2: </label>`)
+  var label3 = $(`<label for="service2">Service 2: </label>`)
+  var label5 = $(`<label for="service3">Service 3: </label>`)
+  var label6 = $(`<label for="service4">Service 4: </label>`)
+  var label4 = $(`<label for="duration">Duration: </label>`)
 
   var select1 = $(`<select id="ampm" name="ampm" class="form-control form-control-sm"></select>`)
   var select2 = $(`<select id="service" name="service" class="form-control form-control-sm">`)
   var select3 = $(`<select id="service2" name="service2" class="form-control form-control-sm">`)
+  var select5 = $(`<select id="service3" name="service3" class="form-control form-control-sm">`)
+  var select6 = $(`<select id="service4" name="service4" class="form-control form-control-sm">`)
+  var select4 = $(`<select id="duration" name="duration" class="form-control form-control-sm">`)
 
   // Appending option tag for time
   select1.append(`<option value="none">Choose Time</option>`)        
@@ -1130,19 +1144,49 @@ function appendScheduleForms() {
     select3.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
   })
 
+  // Appending all option tag for service2
+  select5.append(`<option value="none">Select Service</option>`)
+  schedule_data["services"].forEach(service => {
+    select5.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+
+  // Appending all option tag for service2
+  select6.append(`<option value="none">Select Service</option>`)
+  schedule_data["services"].forEach(service => {
+    select6.append(`<option value="${service._id}">${service.name} - &#8369 ${service.price}</option>`)
+  })
+
+  select4.append(`<option value="none">Select duration</option>`)        
+          .append(`<option value="30">30 minutes</option>`)
+          .append(`<option value="60">1 hour</option>`)
+          .append(`<option value="90">1 hour and 30 minutes</option>`)
+          .append(`<option value="120">2 hours</option>`)
+
+  
+
   // For validation display
   var validationTime = $(`<div id="ampm-invalid" class="all-validations"></div>`)
+  var validationDuration = $(`<div id="duration-invalid" class="all-validations"></div>`)
   var validationService = $(`<div id="service-invalid" class="all-validations"></div>`)
   var validationService2 = $(`<div id="service2-invalid" class="all-validations"></div>`)
+  var validationService3 = $(`<div id="service3-invalid" class="all-validations"></div>`)
+  var validationService4 = $(`<div id="service4-invalid" class="all-validations"></div>`)
 
   // Append all tags
   form1.append(label1).append(select1).append(validationTime)
   form2.append(label2).append(select2).append(validationService)
   form3.append(label3).append(select3).append(validationService2)
+  // form4.append(label4).append(select4).append(duration)
+  // form5.append(label5).append(select5).append(validationService3)
+  // form6.append(label6).append(select6).append(validationService4)
   col1.append(form1)
   col2.append(form2)
   col3.append(form3)
+  col4.append(form4)
+  col5.append(form5)
+  col6.append(form6)
   row.append(col1).append(col2).append(col3)
+  // .append(col4).append(col5).append(col6)
   $(".for-schedule").append(row)
 }
 
@@ -1733,10 +1777,10 @@ function new_patient_with_schedule(event) {
 //------------------------------------------------------
 // Validate forms for registering and updating patient  |
 //------------------------------------------------------
-function checkValidationsForPatient(name, age) {
+function checkValidationsForPatient(name, age, contact_number) {
   validationErrors = []
 
-  // if no name, alert user
+  // if no name, alert user 
   if(name.length == 0) {
     $("#name").addClass("is-invalid");
     $("#name-invalid").addClass("invalid-feedback");
@@ -1749,13 +1793,24 @@ function checkValidationsForPatient(name, age) {
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age is required")
     validationErrors.push('Age')
-
   // if age is not a number
   } else if (!regexAge.test(age)) {
     $("#age").addClass("is-invalid");
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age must be numeric")
     validationErrors.push('Age')
+  }
+  if(contact_number == 0) {
+    $("#contact_number").addClass("is-invalid");
+    $("#contact_number-invalid").addClass("invalid-feedback");
+    $("#contact_number-invalid").text("Contact Number is required")
+    validationErrors.push('Contact Number')
+  // if contact number is not a number
+  } else if (!regexAge.test(contact_number)) {
+    $("#contact_number").addClass("is-invalid");
+    $("#contact_number-invalid").addClass("invalid-feedback");
+    $("#contact_number-invalid").text("Contact Number must be numeric")
+    validationErrors.push('Contact Number')
   }
 }
 
@@ -1915,8 +1970,26 @@ function show_events(events, month, day) {
   }
   // If there are events
   else {
+
+    // objs.sort((a,b) => (a.last_nom > b.last_nom) ? 1 : ((b.last_nom > a.last_nom) ? -1 : 0)); 
+
+    var eventsAM = events.filter(event => event.ampm.includes("AM") && !(event.ampm.includes('10') || event.ampm.includes('11') || event.ampm.includes('12')))
+    var eventsAMTens = events.filter(event => event.ampm.includes("AM") && (event.ampm.includes('10') || event.ampm.includes('11') || event.ampm.includes('12')))
+    var eventsPMTens = events.filter(event => event.ampm.includes("PM") && (event.ampm.includes('12')))
+    var eventsPM = events.filter(event => event.ampm.includes("PM") && !(event.ampm.includes('12')))
+    eventsAM.sort((a,b) => (a.ampm > b.ampm) ? 1 : ((b.ampm > a.ampm) ? -1 : 0)); 
+    eventsAMTens.sort((a,b) => (a.ampm > b.ampm) ? 1 : ((b.ampm > a.ampm) ? -1 : 0)); 
+    eventsPMTens.sort((a,b) => (a.ampm > b.ampm) ? 1 : ((b.ampm > a.ampm) ? -1 : 0)); 
+    eventsPM.sort((a,b) => (a.ampm > b.ampm) ? 1 : ((b.ampm > a.ampm) ? -1 : 0)); 
+    var sortedEvents = []
+    
+    eventsAM.forEach(event => sortedEvents.push(event))
+    eventsAMTens.forEach(event => sortedEvents.push(event))
+    eventsPMTens.forEach(event => sortedEvents.push(event))
+    eventsPM.forEach(event => sortedEvents.push(event))
+    
     // Go through and add each event as a card to the events container
-    events.forEach(event => {
+    sortedEvents.forEach(event => {
       // Set all tags needed
       var myContainer = $("<div class='container'></div>");
       // Setup card color blue
@@ -2592,7 +2665,7 @@ function new_payment_json(year, month, day,  ampm, servicesFiltered, medicineFil
 //-----------------------------------------------------
 // Validates forms of adding and updating schedule     |
 //-----------------------------------------------------
-function checkValidationsForSchedule(ampm, service, service2) {
+function checkValidationsForSchedule(ampm, duration, service, service2, service3, service4) {
   validationErrors = []
   // if time is 'none', alert user
   if(ampm === 'none') {
@@ -2601,14 +2674,27 @@ function checkValidationsForSchedule(ampm, service, service2) {
     $("#ampm-invalid").text("Please choose time")
     validationErrors.push('Time')
   }
+  if(duration === 'none') {
+    $("#duration").addClass("is-invalid");
+    $("#duration-invalid").addClass("invalid-feedback");
+    $("#duration-invalid").text("Please choose duration")
+    validationErrors.push('Duration')
+  }
   // if no services, alert user
   if(service === 'none' && service2 === 'none') {
+  // if(service === 'none' && service2 === 'none' && service3 === 'none' && service4 === 'none') {
     $("#service").addClass("is-invalid");
     $("#service-invalid").addClass("invalid-feedback");
     $("#service-invalid").text("Please choose at least 1 service")
     $("#service2").addClass("is-invalid");
     $("#service2-invalid").addClass("invalid-feedback");
     $("#service2-invalid").text("Please choose at least 1 service")
+    // $("#service3").addClass("is-invalid");
+    // $("#service3-invalid").addClass("invalid-feedback");
+    // $("#service3-invalid").text("Please choose at least 1 service")
+    // $("#service4").addClass("is-invalid");
+    // $("#service4-invalid").addClass("invalid-feedback");
+    // $("#service4-invalid").text("Please choose at least 1 service")
     validationErrors.push('Service')
   }
 }
@@ -2915,8 +3001,6 @@ function new_patient(event) {
       $(".events-container").show(300);
   });
   
-  
-
   // Event handler for ok button
   $("#ok-button").unbind().click({date: event.data.date}, function() {
       // Get all data needed for registration of patient
@@ -3064,7 +3148,7 @@ function new_patient(event) {
       }
 
       // Check validations for patient form
-      checkValidationsForPatient(name, age)
+      checkValidationsForPatient(name, age, contact_number)
 
       // if no errors
       if(validationErrors.length == 0) {

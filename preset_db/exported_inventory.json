@@ -1,0 +1,201 @@
+[{
+	"_id": {
+		"$oid": "5d93a93e5471b206a8687cde"
+	},
+	"name": "Dental Composite",
+	"price": null,
+	"quantity": 100,
+	"is_med": "yes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9515471b206a8687cdf"
+	},
+	"name": "Dental Alginate",
+	"price": null,
+	"quantity": 10,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9665471b206a8687ce0"
+	},
+	"name": "Dental Stone",
+	"price": null,
+	"quantity": 12,
+	"is_med": "yes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9755471b206a8687ce1"
+	},
+	"name": "Cast Stone",
+	"price": null,
+	"quantity": 10,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9875471b206a8687ce2"
+	},
+	"name": "Dental Needle",
+	"price": null,
+	"quantity": 10,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9985471b206a8687ce3"
+	},
+	"name": "Anesthesia",
+	"price": null,
+	"quantity": 100,
+	"is_med": "yes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9a85471b206a8687ce4"
+	},
+	"name": "Surgical Mask",
+	"price": null,
+	"quantity": 100,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9b15471b206a8687ce5"
+	},
+	"name": "Surgical Gloves",
+	"price": null,
+	"quantity": 10,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9c25471b206a8687ce6"
+	},
+	"name": "Disposable Polybib",
+	"price": null,
+	"quantity": 12,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9cd5471b206a8687ce7"
+	},
+	"name": "Cups",
+	"price": null,
+	"quantity": 50,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9d55471b206a8687ce8"
+	},
+	"name": "Tissue",
+	"price": null,
+	"quantity": 100,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9e15471b206a8687ce9"
+	},
+	"name": "Tooth paste",
+	"price": null,
+	"quantity": 50,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93a9ea5471b206a8687cea"
+	},
+	"name": "Tooth brush",
+	"price": null,
+	"quantity": 100,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa005471b206a8687ceb"
+	},
+	"name": "Mouthwash",
+	"price": null,
+	"quantity": 50,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa095471b206a8687cec"
+	},
+	"name": "Oral Prophylaxis Paste",
+	"price": null,
+	"quantity": 15,
+	"is_med": "yes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa125471b206a8687ced"
+	},
+	"name": "Polymer Reinforced Cement",
+	"price": null,
+	"quantity": 20,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa345471b206a8687cee"
+	},
+	"name": "Gutta percha solvent",
+	"price": null,
+	"quantity": 40,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa3c5471b206a8687cef"
+	},
+	"name": "Dental Burs",
+	"price": null,
+	"quantity": 20,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa465471b206a8687cf0"
+	},
+	"name": "Orthodontic wires",
+	"price": null,
+	"quantity": 20,
+	"is_med": "no",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d93aa4e5471b206a8687cf1"
+	},
+	"name": "Legaties",
+	"price": null,
+	"quantity": 27,
+	"is_med": "no",
+	"__v": 0
+}]
+

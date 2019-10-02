@@ -10,7 +10,7 @@ const Inventory = require('../models/inventory')
 
 // Render the schedule page
 // Get /schedule
-router.get('/', auth.isUser, (req, res) => {
+router.get('/', (req, res) => {
   res.render('schedule')
 }) 
 
@@ -109,7 +109,7 @@ router.get('/initial-load', (req, res) => {
     thisData.scheduleData = s
     thisData.serviceData = serv
     thisData.inventoryData = i
-    
+
     return thisData
   }
 

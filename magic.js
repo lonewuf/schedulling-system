@@ -173,13 +173,109 @@
 //   `)
 // }
 
-for(let i = 38; i >= 31; i--) {
-  console.log(`
-  <tr>
-    <td class="t-${i+10}">${i+10}</td>
-    <td class="t-${i+10}"><input type="text" id="t-${i+10}" name="t-${i+10}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
-    <td class="t-${i}">${i}</td>
-    <td class="t-${i}"><input type="text" id="t-${i}" name="t-${i}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
-  </tr>
-  `)
-}
+// for(let i = 38; i >= 31; i--) {
+//   console.log(`
+//   <tr>
+//     <td class="t-${i+10}">${i+10}</td>
+//     <td class="t-${i+10}"><input type="text" id="t-${i+10}" name="t-${i+10}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
+//     <td class="t-${i}">${i}</td>
+//     <td class="t-${i}"><input type="text" id="t-${i}" name="t-${i}" class="form-control form-control-sm" value="<%= patient.teeth.t_${i} %>" readonly></td>
+//   </tr>
+//   `)
+// }
+var a = [
+{
+  "_id" : ObjectId("5d931c402eee8e1e58aafbfa"),
+  "resched" : {
+          "is_resched" : false
+  },
+  "service" : [
+          ObjectId("5d93012cced15b27f48e4861")
+  ],
+  "serviceSimple" : [ ],
+  "date" : ISODate("2019-10-01T09:27:55.045Z"),
+  "cancelled" : false,
+  "paid" : false,
+  "done" : false,
+  "patient" : ObjectId("5d931c402eee8e1e58aafbf9"),
+  "month" : 10,
+  "year" : 2019,
+  "day" : 10,
+  "ampm" : "12-15-PM",
+  "medicine" : [ ],
+  "__v" : 0
+},
+{
+  "_id" : ObjectId("5d93015fced15b27f48e4862"),
+  "resched" : {
+          "is_resched" : false
+  },
+  "service" : [
+          ObjectId("5d93012cced15b27f48e4861")
+  ],
+  "serviceSimple" : [ ],
+  "date" : ISODate("2019-10-01T07:32:37.261Z"),
+  "cancelled" : true,
+  "paid" : false,
+  "done" : false,
+  "patient" : ObjectId("5d92f97d11e2c405f023aa42"),
+  "month" : 10,
+  "year" : 2019,
+  "day" : 1,
+  "ampm" : "10-15-AM",
+  "medicine" : [ ],
+  "__v" : 0
+},
+{
+  "_id" : ObjectId("5d931c7ee17e1d1f9cca811a"),
+  "resched" : {
+          "is_resched" : false
+  },
+  "service" : [
+          ObjectId("5d93012cced15b27f48e4861")
+  ],
+  "serviceSimple" : [ ],
+  "date" : ISODate("2019-10-01T09:28:57.417Z"),
+  "cancelled" : false,
+  "paid" : false,
+  "done" : false,
+  "patient" : ObjectId("5d931c7ee17e1d1f9cca8119"),
+  "month" : 10,
+  "year" : 2019,
+  "day" : 4,
+  "ampm" : "11-45-AM",
+  "medicine" : [ ],
+  "__v" : 0
+},
+{
+  "_id" : ObjectId("5d931c94e17e1d1f9cca811d"),
+  "resched" : {
+          "is_resched" : false
+  },
+  "service" : [
+          ObjectId("5d93012cced15b27f48e4861")
+  ],
+  "serviceSimple" : [ ],
+  "date" : ISODate("2019-10-01T09:28:57.417Z"),
+  "cancelled" : false,
+  "paid" : true,
+  "done" : true,
+  "patient" : ObjectId("5d931c94e17e1d1f9cca811c"),
+  "month" : 10,
+  "year" : 2019,
+  "day" : 5,
+  "ampm" : "12-00-PM",
+  "medicine" : [
+          {
+                  "_id" : ObjectId("5d931ba795792f2c74c8be42"),
+                  "text" : "sample product - ₱ 111",
+                  "price" : 2553,
+                  "quantity" : 23
+          }
+  ],
+  "__v" : 0,
+  "grand_total" : 3053,
+  "medicine_total" : 2553,
+  "service_total" : 500
+} ]
+

@@ -23,79 +23,121 @@ router.get('/', auth.isUser, (req, res) => {
 
 router.post('/add-product', (req, res) => {
   const name = req.body.name
-  const price = req.body.price
+  var price = req.body.price
   const quantity = req.body.quantity
   const is_med = req.body.is_med
 
-  
-  if(name === "") {
-    req.flash('danger', 'Name is required')
+  if(name == "") {
+    req.flash('danger', 'Name is required') 
     res.redirect('/inventory'); 
-  }
-  if(quantity === "") {
-    req.flash('danger', 'Quantity is required')
-    res.redirect('/inventory');
-  } 
-  if(is_med === undefined || is_med === null || is_med === '') {
-    req.flash('danger', 'Please specify if medicine or not')
-    res.redirect('/inventory');
   } else {
-
-  if((r.test(price) && rQuantity.test(quantity)) || price === "") {
-    if(rQuantity.test(quantity)) {
-      Inventory.create({name, price, quantity, is_med}, (err, createdProduct) => {
-        if(err) {
-          throw(err)
-        } else { 
-          req.flash('success', 'Product is created')
+    if(quantity == "") {
+      req.flash('danger', 'Quantity is required')
+      res.redirect('/inventory');
+    } else {
+      if(is_med == undefined || is_med === null || is_med === '') {
+        req.flash('danger', 'Please specify if medicine or not')
+        res.redirect('/inventory');
+      } else {
+        if((r.test(price) && rQuantity.test(quantity)) || price === "") {
+          if(rQuantity.test(quantity)) {
+            price = price == '' ? 0 : price;
+            Inventory.create({name, price, quantity, is_med}, (err, createdProduct) => {
+              if(err) {
+                throw(err)
+              } else { 
+                req.flash('success', 'Product is created')
+                res.redirect('/inventory');
+              }
+            })
+          } else {
+            req.flash('danger', 'Quantity must be numeric')
+            res.redirect('/inventory');
+          }
+          
+        } else {
+          req.flash('danger', 'Price and Quantity must be numeric')
           res.redirect('/inventory');
         }
-      })
-    } else {
-      req.flash('danger', 'Quantity must be numeric')
-      res.redirect('/inventory');
+      }
     }
     
-  } else {
-    req.flash('danger', 'Price and Quantity must be numeric')
-    res.redirect('/inventory');
   }
-  }
+  
 })
 
 router.post('/edit-product/:id', (req, res) => {
   const name = req.body.name
-  const price = req.body.price
+  var price = req.body.price
   const quantity = req.body.quantity
   const id = req.params.id
   const is_med = req.body.is_med
 
-  if(name === "") {
-    req.flash('danger', 'Name is required')
-    res.redirect('/inventory'); 
-  }
-  if(quantity === "") {
-    req.flash('danger', 'Quantity is required')
-    res.redirect('/inventory');
-  }
-  if(is_med === undefined) {
-    req.flash('danger', 'Please specify if medicine or not')
-    res.redirect('/inventory');
-  }
+  // if(name === "") {
+  //   req.flash('danger', 'Name is required')
+  //   res.redirect('/inventory'); 
+  // }
+  // if(quantity === "") {
+  //   req.flash('danger', 'Quantity is required')
+  //   res.redirect('/inventory');
+  // }
+  // if(is_med === undefined) {
+  //   req.flash('danger', 'Please specify if medicine or not')
+  //   res.redirect('/inventory');
+  // }
  
-  if(r.test(price)) {
-    Inventory.updateOne({_id: id}, {name, price, quantity, is_med}, (err, updatedProduct) => {
-      if(err) {
-        throw(err)
-      } else {
-        req.flash('success', 'Product is updated')
-        res.redirect('/inventory');
-      }
-    })
+  // if(r.test(price)) {
+  //   price = price == '' ? 0 : price;
+  //   Inventory.updateOne({_id: id}, {name, price, quantity, is_med}, (err, updatedProduct) => {
+  //     if(err) {
+  //       throw(err)
+  //     } else {
+  //       req.flash('success', 'Product is updated')
+  //       res.redirect('/inventory');
+  //     }
+  //   })
+  // } else {
+  //   req.flash('danger', 'Price must be numberic')
+  //   res.redirect('/inventory');
+  // }
+
+  if(name == "") {
+    req.flash('danger', 'Name is required') 
+    res.redirect('/inventory'); 
   } else {
-    req.flash('danger', 'Price must be numberic')
-    res.redirect('/inventory');
+    if(quantity == "") {
+      req.flash('danger', 'Quantity is required')
+      res.redirect('/inventory');
+    } else {
+      if(is_med == undefined || is_med === null || is_med === '') {
+        req.flash('danger', 'Please specify if medicine or not')
+        res.redirect('/inventory');
+      } else {
+        if((r.test(price) && rQuantity.test(quantity)) || price === "") {
+          if(rQuantity.test(quantity)) {
+            price = price == '' ? 0 : price;
+            Inventory.updateOne({_id: id}, {name, price, quantity, is_med}, (err, updatedProduct) => {
+              if(err) {
+                throw(err)
+              } else {
+                req.flash('success', 'Product is updated')
+                res.redirect('/inventory');
+              }
+            })
+          } else {
+            req.flash('danger', 'Quantity must be numeric')
+            res.redirect('/inventory');
+          }
+          
+        } else {
+          req.flash('danger', 'Price and Quantity must be numeric')
+          res.redirect('/inventory');
+        }
+      }
+    }
+    
   }
+
 })
 
 router.post('/add-quantity/:id', (req, res) => {

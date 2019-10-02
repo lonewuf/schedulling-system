@@ -1,0 +1,8 @@
+mongoimport --db dentalclinic-dev --collection users --file exported_users.json --jsonArray
+mongoimport --db dentalclinic-dev --collection inventories --file exported_inventory.json --jsonArray
+mongoimport --db dentalclinic-dev --collection patients --file exported_patients.json --jsonArray
+mongoimport --db dentalclinic-dev --collection payments --file exported_payments.json --jsonArray
+mongoimport --db dentalclinic-dev --collection teeths --file exported_teeths.json --jsonArray
+mongoimport --db dentalclinic-dev --collection services --file exported_services.json --jsonArray
+mongoimport --db dentalclinic-dev --collection schedules --file exported_schedules.json --jsonArray
+ping 127.0.0.1 -n 5 > nul

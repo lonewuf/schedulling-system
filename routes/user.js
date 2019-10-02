@@ -1,26 +1,33 @@
+// Import all dependencies needed
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const bcrypt = require('bcryptjs'); 
 const auth = require('../config/auth'); 
 
-
 // Import models
 const User = require('../models/users')
 
+// Shows home page 
 router.get('/', auth.isUser, (req, res) => {
-  res.render('index');
+  res.render('index', {
+    title: 'L.A. TAN Dental Clinic'
+  });
 })
 
+// Shows login page
 router.get('/login', (req, res) => {
 
   if (res.locals.user) {
     res.redirect('/');
   } else {
-    res.render('login');
+    res.render('login', {
+      tite: 'Login'
+    });
   }
 })
 
+// Login user
 router.post('/login', (req, res, next) => {
 
   passport.authenticate('local', {
@@ -39,7 +46,7 @@ router.get('/register',  (req, res) => {
 
 });
 
-// Register Customer
+// Register admin
 router.post('/register', (req, res) => {
  
   var name = req.body.name;
@@ -98,6 +105,86 @@ router.post('/register', (req, res) => {
     }
   }
 });
+
+// Shows admin list
+router.get('/admin-list', (req, res) => {
+  User.find({})
+    .then(users => {
+      res.render('admin-list', {
+        title: 'Admin List',
+        users
+      })
+    })
+})
+
+// Update admin based on id
+router.post('/update-admin/:id', (req, res) => {
+  const id = req.params.id
+  const name = req.body.name;
+  const username = req.body.username;
+  const password = req.body.password;
+  const password2 = req.body.password2;
+
+  if(name == '' || username == '' || password == '' || password2 == '') {
+    req.flash('danger', 'All Field is required')
+    res.redirect('back')
+  } else {
+    if(password != password2) {
+      req.flash('danger', 'Password does not match')
+      res.redirect('back')
+    } else {
+
+      if(username == 'adminone') {
+        req.flash('danger', 'You can\'t edit this admin')
+        res.redirect('back');
+      } else {
+        User.findOne({username: username}, function (err, user) {
+          if (err)
+              console.log(err);
+      
+          if (user) {
+              req.flash('danger', 'Username exists, choose another!');
+              res.redirect('back');
+          } else {
+    
+            bcrypt.genSalt(10, function (err, salt) {
+                bcrypt.hash(password, salt, function (err, hash) {
+                    if (err)
+                        console.log(err);
+                    password = hash;
+    
+                    User.updateOne({_id: id}, {$set: {name, username, password}})
+                      .then(updatedUser => {
+                        req.flash('success', 'Admin is updated')
+                      })
+                });
+            });
+          }
+        });
+      }
+    }
+  }
+})
+
+// Deletes admin based on id
+router.get('/delete-admin/:id', (req, res) => {
+  const id = req.params.id
+
+  User.findById(id)
+    .then(foundUser => {
+      if(foundUser.username == 'adminone') {
+        req.flash('danger', 'Your can\'t delete that admin')
+        res.redirect('back');
+      } else {
+        User.findByIdAndDelete(id)
+          .then(() => {
+            req.flash('success', 'Admin is deleted')
+            res.redirect('back');
+          })
+      }
+    })
+    .catch(err => console.log(err))
+})
 
 router.get('/logout', function (req, res) {
 

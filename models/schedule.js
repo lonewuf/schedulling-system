@@ -31,6 +31,9 @@ const ScheduleSchema = mongoose.Schema({
         }
       }
     ],
+    duration: {
+      type: Number,
+    },
     month: {
       type: Number,
     },

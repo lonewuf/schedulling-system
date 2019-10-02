@@ -2,23 +2,25 @@
 
 <% var counter = 0 %>
 <% if(patients.length > 0) { %> 
-  <h5 class="display-5 text-center mt-3">List of patients</h5> 
+  <h5 class="display-4 text-center mb-4">List of patients</h5> 
   <table class="table table-striped table-hover mt-2">
     <thead>
       <tr>
           <th>#</th>
-          <th>Patient Name</th>
+          <th>Patient Name</th> 
           <th>Age</th>
           <th>Contact Number</th>
+          <th>Actions</th>
       </tr>
   </thead>
-  <tbody>
+  <tbody> 
     <% patients.forEach(patient => { %>
       <tr>
           <th><%= (counter+1) %></th>
           <td><a target="_blank" href="/patient/search/<%= patient._id %>" class="text primary"><%= patient.name %></a></td>
           <td><%= patient.age %></td>
           <td><%= patient.contact_number %></td>
+          <td><a href="/patient/update-this-patient/<%= patient._id  %>" class="btn btn-sm btn-warning">Update Patient</a></td>
       </tr>
       <% counter++ %>
     <% }) %>

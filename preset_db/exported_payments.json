@@ -1,0 +1,39 @@
+[{
+	"_id": {
+		"$oid": "5d931ca8e17e1d1f9cca811e"
+	},
+	"service": [
+		{
+			"$oid": "5d93012cced15b27f48e4861"
+		}
+	],
+	"date": {
+		"$date": "2019-10-01T09:28:57.452Z"
+	},
+	"paid": true,
+	"schedule": {
+		"$oid": "5d931c94e17e1d1f9cca811d"
+	},
+	"month": 10,
+	"day": 5,
+	"year": 2019,
+	"ampm": "12-00-PM",
+	"medicine_total": 2553,
+	"service_total": 500,
+	"grand_total": 3053,
+	"patient": {
+		"$oid": "5d931c94e17e1d1f9cca811c"
+	},
+	"medicine": [
+		{
+			"_id": {
+				"$oid": "5d931ba795792f2c74c8be42"
+			},
+			"text": "sample product - ₱ 111",
+			"price": 2553,
+			"quantity": 23
+		}
+	],
+	"__v": 0
+}]
+

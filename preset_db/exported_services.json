@@ -1,0 +1,105 @@
+[{
+	"_id": {
+		"$oid": "5d93012cced15b27f48e4861"
+	},
+	"name": "Dental Extraction (Regular)",
+	"price": 500,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939c1a1940d12f4470c611"
+	},
+	"name": "Odontectomy (1)",
+	"price": 6000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939c2b1940d12f4470c612"
+	},
+	"name": "Odontectomy (2)",
+	"price": 7000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939c371940d12f4470c613"
+	},
+	"name": "Odontectomy (3)",
+	"price": 8000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939ca81940d12f4470c614"
+	},
+	"name": "Dental Filling / Restoration (per surface)",
+	"price": 800,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939cba1940d12f4470c615"
+	},
+	"name": "Dental Clining / Propylaxis",
+	"price": 800,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939cc41940d12f4470c616"
+	},
+	"name": "Braces",
+	"price": 45000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939cce1940d12f4470c617"
+	},
+	"name": "Brace Adjustment",
+	"price": 1000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939cd81940d12f4470c618"
+	},
+	"name": "Denture (Regular)",
+	"price": 3500,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939ce41940d12f4470c619"
+	},
+	"name": "Denture (Full)",
+	"price": 10000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939d021940d12f4470c61a"
+	},
+	"name": "Root Canal Treatment (per root canal)",
+	"price": 4000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939d151940d12f4470c61b"
+	},
+	"name": "Tooth Whitening (7 sessions)",
+	"price": 15000,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d939d211940d12f4470c61c"
+	},
+	"name": "Retainer",
+	"price": 5000,
+	"__v": 0
+}]
+
