@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const auth = require('../config/auth')
 
 // Import models
 const Patient = require('../models/patient')
@@ -7,15 +8,20 @@ const Teeth = require('../models/teeth')
 const Payment = require('../models/payment')
 const r = /^[0-9]*$/
 
-router.get('/', (req, res) => {
+// Show the Patient List page
+router.get('/', auth.isUser, (req, res) => {
+  // Get all the patients in database
   Patient.find({})
+    .sort('name')
     .then(patients => {
+      // Render the Patient list page
       res.render('patients', {patients})
     })
     .catch(err => console.log(err))
-})
+}) 
 
-router.post('/add-patient', (req, res) => {
+// Add patient in database
+router.post('/add-patient', auth.isUser, (req, res) => {
   const data = req.body
 
   // Create teeth document in database
@@ -106,9 +112,10 @@ router.post('/add-patient', (req, res) => {
   })
 })
 
-router.post('/update-patient', (req, res) => {
+// Updating Patient
+router.post('/update-patient', auth.isUser, (req, res) => {
   const data = req.body
-
+  // Update patient details
   Patient.updateOne({_id: data.patientID},
     {$set: {
       // User details
@@ -144,6 +151,7 @@ router.post('/update-patient', (req, res) => {
     .then(updatedPatient => {
       Patient.findById(data.patientID)
         .then(foundPatient => {
+          // Update Patient's Teeth information
           Teeth.updateOne({_id: foundPatient.teeth}, 
               {$set: {
                 t_11: data.t_11,
@@ -181,7 +189,6 @@ router.post('/update-patient', (req, res) => {
               }}
             )
             .then(updatedTeeth => {
-              console.log(updatedTeeth)
             })
             .catch(err => console.log(err))
         })
@@ -190,37 +197,43 @@ router.post('/update-patient', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.get('/search/:id', (req, res) => {
+// Show the profile page of patient
+router.get('/search/:id', auth.isUser, (req, res) => {
   const id = req.params.id
 
+  // Find the patient by id
   Patient.findById(id)
     .populate('teeth')
     .then(patient => {
       Payment.find({patient: id})
         .populate('service')
         .then(paymentList => {
-          console.log(paymentList[0].service)
+          // Render the profile page of patient
           res.render('patient', {patient, paymentList})
         })
     })
     .catch(err => console.log(err))
 })
 
-router.get('/update-this-patient/:id', (req, res) => {
+// Show the update page of patient
+router.get('/update-this-patient/:id', auth.isUser, (req, res) => {
   const id = req.params.id
 
+  // Find the patient by id
   Patient.findById(id)
     .populate('teeth')
     .then(patient => {
+      // Render the profile page of patient for updating
       res.render('edit-patient', {patient})
     })
-    .catch(err => console.log(err))
+    .catch(err => console.log(err)) 
 })
 
-router.post('/update-this-patient/:id', (req, res) => {
+// Update patient based on id
+router.post('/update-this-patient/:id', auth.isUser, (req, res) => {
   const id = req.params.id
   const data = req.body
-
+  // Validations for name, age and contact number
   if(data.name != '') {
     if(data.age != '') {
       if(r.test(data.age)) {
@@ -298,7 +311,7 @@ router.post('/update-this-patient/:id', (req, res) => {
                     )
                     .then(updatedTeeth => {
                       req.flash('success', 'Patient updated')
-                      res.redirect(`/patient/search/${id}`);
+                      res.redirect(`/patient`);
                     })
                     .catch(err => console.log(err))
                 })

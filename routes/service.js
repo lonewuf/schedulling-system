@@ -8,7 +8,8 @@ const Teeth = require('../models/teeth')
 const Service = require('../models/service')
 const r = /^\d+(\.\d{1,2})?$/
 
-router.get('/', (req, res) => {
+// Show page of services
+router.get('/', auth.isUser, (req, res) => {
 
   Service.find({}, (err, services) => {
     if(err) {
@@ -20,7 +21,8 @@ router.get('/', (req, res) => {
   
 })
 
-router.post('/add-service', (req, res) => {
+// Add service
+router.post('/add-service', auth.isUser, (req, res) => {
   const name = req.body.name
   const price = req.body.price
   if(name != '') {
@@ -46,11 +48,13 @@ router.post('/add-service', (req, res) => {
   
 })
 
-router.post('/edit-service/:id', (req, res) => {
+// Update Service
+router.post('/edit-service/:id', auth.isUser, (req, res) => {
   const name = req.body.name
   const price = req.body.price
   const id = req.params.id
 
+  // Validation for name and price
   if(name != '') {
     if(r.test(price)) {
       Service.updateOne({_id: id}, {name, price}, (err, updatedService) => {
@@ -72,7 +76,8 @@ router.post('/edit-service/:id', (req, res) => {
   
 })
 
-router.get('/delete-service/:id', auth.isUser, (req, res) => {
+// Delete service in database
+router.get('/delete-service/:id', auth.isUser,  (req, res) => {
 
   const id = req.params.id
 

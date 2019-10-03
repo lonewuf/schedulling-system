@@ -1,133 +1,230 @@
 [{
 	"_id": {
-		"$oid": "5d92f97d11e2c405f023aa42"
+		"$oid": "5d9556e8f6786405c88058b2"
 	},
 	"schedules": [],
 	"service": [],
 	"medicine": [],
 	"is_scheduled": false,
-	"name": "nicoaaa",
-	"gender": "male",
-	"address": "sad",
-	"contact_number": "asd",
-	"age": "121",
-	"nationality": "",
-	"occupation": "sad",
-	"reffered_by": "sad",
+	"name": "Sam Tumanguil",
+	"gender": "",
+	"address": "Quezon City",
+	"contact_number": "0922342123",
+	"age": "23",
+	"nationality": "Filipino",
+	"occupation": "Senior Programmer",
+	"reffered_by": "",
 	"chief_complainant": "",
 	"diagnosis": "",
 	"hypertension": false,
 	"epilepsy": false,
 	"diabetes": false,
 	"kidney_disease": false,
-	"heart_disease": true,
-	"liver_disease": true,
-	"allergy": true,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
+	"asthma": false,
+	"others": false,
+	"deposit_stains": "mild",
+	"oral_hygiene": "poor",
+	"treatment_planning": "Sample treatment",
+	"teeth": {
+		"$oid": "5d9556e7f6786405c88058b1"
+	},
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d955784f6786405c88058b4"
+	},
+	"schedules": [],
+	"service": [],
+	"medicine": [],
+	"is_scheduled": false,
+	"name": "Leinard Seiza",
+	"gender": "male",
+	"address": "Pasig City",
+	"contact_number": "09166698779",
+	"age": "23",
+	"nationality": "Filipino",
+	"occupation": "System Analyst",
+	"reffered_by": "aa",
+	"chief_complainant": "aa",
+	"diagnosis": "aa",
+	"hypertension": false,
+	"epilepsy": true,
+	"diabetes": false,
+	"kidney_disease": false,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
+	"asthma": true,
+	"others": false,
+	"deposit_stains": "severe",
+	"oral_hygiene": "poor",
+	"treatment_planning": "sample treatmentssssSSS",
+	"teeth": {
+		"$oid": "5d955784f6786405c88058b3"
+	},
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d95583af6786405c88058b6"
+	},
+	"schedules": [],
+	"service": [],
+	"medicine": [],
+	"is_scheduled": false,
+	"name": "Mark Anthony Eugenio",
+	"gender": "",
+	"address": "Quezon City",
+	"contact_number": "09672071183",
+	"age": "20",
+	"nationality": "Filipino",
+	"occupation": "Programmer",
+	"reffered_by": "",
+	"chief_complainant": "",
+	"diagnosis": "",
+	"hypertension": false,
+	"epilepsy": false,
+	"diabetes": false,
+	"kidney_disease": false,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
+	"asthma": false,
+	"others": false,
+	"deposit_stains": "mild",
+	"oral_hygiene": "good",
+	"treatment_planning": "",
+	"teeth": {
+		"$oid": "5d95583af6786405c88058b5"
+	},
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d95589ef6786405c88058b8"
+	},
+	"schedules": [],
+	"service": [],
+	"medicine": [],
+	"is_scheduled": false,
+	"name": "Richclaud Dela Cruz Felix",
+	"gender": "",
+	"address": "",
+	"contact_number": "09453495221",
+	"age": "20",
+	"nationality": "Filipino",
+	"occupation": "Quality Assiarance Manager",
+	"reffered_by": "",
+	"chief_complainant": "",
+	"diagnosis": "",
+	"hypertension": false,
+	"epilepsy": false,
+	"diabetes": false,
+	"kidney_disease": false,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
+	"asthma": false,
+	"others": false,
+	"deposit_stains": "mild",
+	"oral_hygiene": "good",
+	"treatment_planning": "",
+	"teeth": {
+		"$oid": "5d95589ef6786405c88058b7"
+	},
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d9558d7f6786405c88058ba"
+	},
+	"schedules": [],
+	"service": [],
+	"medicine": [],
+	"is_scheduled": false,
+	"name": "Ehrl Rikkenson Bagay",
+	"gender": "male",
+	"address": "Manila City",
+	"contact_number": "09453560863",
+	"age": "22",
+	"nationality": "",
+	"occupation": "Database Programmer",
+	"reffered_by": "",
+	"chief_complainant": "",
+	"diagnosis": "",
+	"hypertension": false,
+	"epilepsy": false,
+	"diabetes": false,
+	"kidney_disease": false,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
+	"asthma": false,
+	"others": false,
+	"deposit_stains": "moderate",
+	"oral_hygiene": "good",
+	"treatment_planning": "",
+	"teeth": {
+		"$oid": "5d9558d7f6786405c88058b9"
+	},
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d955911f6786405c88058bc"
+	},
+	"schedules": [],
+	"service": [],
+	"medicine": [],
+	"is_scheduled": true,
+	"name": "Ralph Restee Villano",
+	"gender": "",
+	"address": "",
+	"contact_number": "09223187652",
+	"age": "20",
+	"nationality": "Filipino",
+	"occupation": "Asst. Database Programmer",
+	"reffered_by": "",
+	"chief_complainant": "",
+	"diagnosis": "",
+	"hypertension": false,
+	"epilepsy": false,
+	"diabetes": false,
+	"kidney_disease": false,
+	"heart_disease": false,
+	"liver_disease": false,
+	"allergy": false,
 	"asthma": false,
 	"others": false,
 	"deposit_stains": "moderate",
 	"oral_hygiene": "fair",
-	"treatment_planning": "sadasdasd",
+	"treatment_planning": "",
 	"teeth": {
-		"$oid": "5d92f97d11e2c405f023aa41"
+		"$oid": "5d955911f6786405c88058bb"
 	},
 	"__v": 0
 },
 {
 	"_id": {
-		"$oid": "5d931c402eee8e1e58aafbf9"
+		"$oid": "5d956ae999694f17bc1cd409"
 	},
 	"schedules": [
 		{
-			"$oid": "5d931c402eee8e1e58aafbfa"
-		}
-	],
-	"service": [],
-	"medicine": [],
-	"is_scheduled": true,
-	"name": "sample",
-	"gender": "",
-	"address": "",
-	"contact_number": "",
-	"age": "11",
-	"nationality": "",
-	"occupation": "",
-	"reffered_by": "",
-	"chief_complainant": "",
-	"diagnosis": "",
-	"hypertension": false,
-	"epilepsy": false,
-	"diabetes": false,
-	"kidney_disease": false,
-	"heart_disease": false,
-	"liver_disease": false,
-	"allergy": false,
-	"asthma": false,
-	"others": false,
-	"deposit_stains": "",
-	"oral_hygiene": "",
-	"treatment_planning": "",
-	"teeth": {
-		"$oid": "5d931c402eee8e1e58aafbf8"
-	},
-	"__v": 1
-},
-{
-	"_id": {
-		"$oid": "5d931c7ee17e1d1f9cca8119"
-	},
-	"schedules": [
-		{
-			"$oid": "5d931c7ee17e1d1f9cca811a"
-		}
-	],
-	"service": [],
-	"medicine": [],
-	"is_scheduled": true,
-	"name": "sam",
-	"gender": "",
-	"address": "",
-	"contact_number": "",
-	"age": "2",
-	"nationality": "",
-	"occupation": "",
-	"reffered_by": "",
-	"chief_complainant": "",
-	"diagnosis": "",
-	"hypertension": false,
-	"epilepsy": false,
-	"diabetes": false,
-	"kidney_disease": false,
-	"heart_disease": false,
-	"liver_disease": false,
-	"allergy": false,
-	"asthma": false,
-	"others": false,
-	"deposit_stains": "",
-	"oral_hygiene": "",
-	"treatment_planning": "",
-	"teeth": {
-		"$oid": "5d931c7ee17e1d1f9cca8118"
-	},
-	"__v": 1
-},
-{
-	"_id": {
-		"$oid": "5d931c94e17e1d1f9cca811c"
-	},
-	"schedules": [
-		{
-			"$oid": "5d931c94e17e1d1f9cca811d"
+			"$oid": "5d956ae999694f17bc1cd40a"
 		}
 	],
 	"service": [],
 	"medicine": [],
 	"is_scheduled": false,
-	"name": "aaa",
-	"gender": "",
+	"name": "Marian Rivera",
+	"gender": "female",
 	"address": "",
 	"contact_number": "",
-	"age": "23",
+	"age": "40",
 	"nationality": "",
 	"occupation": "",
 	"reffered_by": "",
@@ -146,43 +243,8 @@
 	"oral_hygiene": "",
 	"treatment_planning": "",
 	"teeth": {
-		"$oid": "5d931c94e17e1d1f9cca811b"
+		"$oid": "5d956ae999694f17bc1cd408"
 	},
 	"__v": 1
-},
-{
-	"_id": {
-		"$oid": "5d9394ef1df8112aa89897be"
-	},
-	"schedules": [],
-	"service": [],
-	"medicine": [],
-	"is_scheduled": false,
-	"name": "sam tumanguil",
-	"gender": "",
-	"address": "",
-	"contact_number": "",
-	"age": "50",
-	"nationality": "",
-	"occupation": "",
-	"reffered_by": "",
-	"chief_complainant": "",
-	"diagnosis": "",
-	"hypertension": false,
-	"epilepsy": false,
-	"diabetes": false,
-	"kidney_disease": true,
-	"heart_disease": true,
-	"liver_disease": false,
-	"allergy": false,
-	"asthma": false,
-	"others": false,
-	"deposit_stains": "moderate",
-	"oral_hygiene": "poor",
-	"treatment_planning": "sample treatment planning",
-	"teeth": {
-		"$oid": "5d9394ef1df8112aa89897bd"
-	},
-	"__v": 0
 }]
 

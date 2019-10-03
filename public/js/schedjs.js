@@ -792,7 +792,6 @@ function schedule_patient(event) {
     // var service4 = $("#service4").val();
     var services = [service, service2]
     var patientID = event.data.id
-    var date = new Date()
     var day = parseInt($(".active-date").html());
 
     // Validate data for scheduling
@@ -957,18 +956,7 @@ function appendScheduleFormsWithVal(event) {
           .append(`<option value="5-30-PM">5:30 PM</option>`)
           .append(`<option value="5-45-PM">5:45 PM</option>`)
           .append(`<option value="6-00-PM">6:00 PM</option>`)
-          .append(`<option value="6-15-PM">6:15 PM</option>`)
-          .append(`<option value="6-30-PM">6:30 PM</option>`)
-          .append(`<option value="6-45-PM">6:45 PM</option>`)
-          .append(`<option value="7-00-PM">7:00 PM</option>`)
-          .append(`<option value="7-15-PM">7:15 PM</option>`)
-          .append(`<option value="7-30-PM">7:30 PM</option>`)
-          .append(`<option value="7-45-PM">7:45 PM</option>`)
-          .append(`<option value="8-00-PM">8:00 PM</option>`)
-          .append(`<option value="8-15-PM">8:15 PM</option>`)
-          .append(`<option value="8-30-PM">8:30 PM</option>`)
-          .append(`<option value="8-45-PM">8:45 PM</option>`)
-          .append(`<option value="9-00-PM">9:00 PM</option>`)
+         
 
   // Appending all option tag for service
   select2.append(`<option value="none">Select Service</option>`)
@@ -1119,18 +1107,7 @@ function appendScheduleForms() {
           .append(`<option value="5-30-PM">5:30 PM</option>`)
           .append(`<option value="5-45-PM">5:45 PM</option>`)
           .append(`<option value="6-00-PM">6:00 PM</option>`)
-          .append(`<option value="6-15-PM">6:15 PM</option>`)
-          .append(`<option value="6-30-PM">6:30 PM</option>`)
-          .append(`<option value="6-45-PM">6:45 PM</option>`)
-          .append(`<option value="7-00-PM">7:00 PM</option>`)
-          .append(`<option value="7-15-PM">7:15 PM</option>`)
-          .append(`<option value="7-30-PM">7:30 PM</option>`)
-          .append(`<option value="7-45-PM">7:45 PM</option>`)
-          .append(`<option value="8-00-PM">8:00 PM</option>`)
-          .append(`<option value="8-15-PM">8:15 PM</option>`)
-          .append(`<option value="8-30-PM">8:30 PM</option>`)
-          .append(`<option value="8-45-PM">8:45 PM</option>`)
-          .append(`<option value="9-00-PM">9:00 PM</option>`)
+          
 
   // Appending all option tag for service
   select2.append(`<option value="none">Select Service</option>`)
@@ -1728,11 +1705,10 @@ function new_patient_with_schedule(event) {
       var service2 = $("#service2").val();
       var services = [service, service2]
       var servicesFiltered = []
-      var date = new Date()
       var day = parseInt($(".active-date").html());
 
       // Validations
-      checkValidationsWithSched(name, age, ampm, service, service2)
+      checkValidationsWithSched(name, age, ampm, contact_number, service, service2)
 
       // If no errors
       if(validationErrors.length === 0) {
@@ -1758,6 +1734,7 @@ function new_patient_with_schedule(event) {
           })
 
           $("#dialog").hide(250);
+          console.log(date)
           // Call function to register and schedule patient
           new_register_and_schedule_json(date, day, ampm, patientDetails, teethComments, medicalHistory, treatment_planning, oralConditions,servicesFiltered);
           date.setDate(day);
@@ -1785,7 +1762,7 @@ function checkValidationsForPatient(name, age, contact_number) {
     $("#name").addClass("is-invalid");
     $("#name-invalid").addClass("invalid-feedback");
     $("#name-invalid").text("Name is required")
-    validationErrors.push('Name')
+    validationErrors.push('Name') 
   } 
   // if no age, alert user
   if(age.length == 0) {
@@ -1817,7 +1794,7 @@ function checkValidationsForPatient(name, age, contact_number) {
 //-------------------------------------------------------------
 // Validate form for registering with scheduling of patient    |
 //-------------------------------------------------------------
-function checkValidationsWithSched(name, age, ampm, service, service2) {
+function checkValidationsWithSched(name, age, ampm, contact_number, service, service2) {
   validationErrors = []
 
   // if no name, alert user
@@ -1833,6 +1810,19 @@ function checkValidationsWithSched(name, age, ampm, service, service2) {
     $("#age-invalid").addClass("invalid-feedback");
     $("#age-invalid").text("Age is required")
     validationErrors.push('Age')
+
+  if(contact_number == 0) {
+    $("#contact_number").addClass("is-invalid");
+    $("#contact_number-invalid").addClass("invalid-feedback");
+    $("#contact_number-invalid").text("Contact Number is required")
+    validationErrors.push('Contact Number')
+  // if contact number is not a number
+  } else if (!regexAge.test(contact_number)) {
+    $("#contact_number").addClass("is-invalid");
+    $("#contact_number-invalid").addClass("invalid-feedback");
+    $("#contact_number-invalid").text("Contact Number must be numeric")
+    validationErrors.push('Contact Number')
+  }
 
   // if age is not a number, alert user
   } else if (!regexAge.test(age)) {
@@ -2665,7 +2655,7 @@ function new_payment_json(year, month, day,  ampm, servicesFiltered, medicineFil
 //-----------------------------------------------------
 // Validates forms of adding and updating schedule     |
 //-----------------------------------------------------
-function checkValidationsForSchedule(ampm, duration, service, service2, service3, service4) {
+function checkValidationsForSchedule(ampm, service, service2) {
   validationErrors = []
   // if time is 'none', alert user
   if(ampm === 'none') {
@@ -2674,27 +2664,14 @@ function checkValidationsForSchedule(ampm, duration, service, service2, service3
     $("#ampm-invalid").text("Please choose time")
     validationErrors.push('Time')
   }
-  if(duration === 'none') {
-    $("#duration").addClass("is-invalid");
-    $("#duration-invalid").addClass("invalid-feedback");
-    $("#duration-invalid").text("Please choose duration")
-    validationErrors.push('Duration')
-  }
   // if no services, alert user
   if(service === 'none' && service2 === 'none') {
-  // if(service === 'none' && service2 === 'none' && service3 === 'none' && service4 === 'none') {
     $("#service").addClass("is-invalid");
     $("#service-invalid").addClass("invalid-feedback");
     $("#service-invalid").text("Please choose at least 1 service")
     $("#service2").addClass("is-invalid");
     $("#service2-invalid").addClass("invalid-feedback");
     $("#service2-invalid").text("Please choose at least 1 service")
-    // $("#service3").addClass("is-invalid");
-    // $("#service3-invalid").addClass("invalid-feedback");
-    // $("#service3-invalid").text("Please choose at least 1 service")
-    // $("#service4").addClass("is-invalid");
-    // $("#service4-invalid").addClass("invalid-feedback");
-    // $("#service4-invalid").text("Please choose at least 1 service")
     validationErrors.push('Service')
   }
 }

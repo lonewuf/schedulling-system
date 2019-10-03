@@ -1,39 +1,109 @@
 [{
 	"_id": {
-		"$oid": "5d931ca8e17e1d1f9cca811e"
+		"$oid": "5d956b6d99694f17bc1cd40c"
 	},
 	"service": [
 		{
-			"$oid": "5d93012cced15b27f48e4861"
+			"$oid": "5d939cd81940d12f4470c618"
+		},
+		{
+			"$oid": "5d939d211940d12f4470c61c"
 		}
 	],
 	"date": {
-		"$date": "2019-10-01T09:28:57.452Z"
+		"$date": "2019-10-03T03:24:57.935Z"
 	},
 	"paid": true,
 	"schedule": {
-		"$oid": "5d931c94e17e1d1f9cca811d"
+		"$oid": "5d956b0b99694f17bc1cd40b"
 	},
 	"month": 10,
-	"day": 5,
+	"day": 2,
 	"year": 2019,
-	"ampm": "12-00-PM",
-	"medicine_total": 2553,
-	"service_total": 500,
-	"grand_total": 3053,
+	"ampm": "9-30-AM",
+	"medicine_total": 200,
+	"service_total": 8500,
+	"grand_total": 8700,
 	"patient": {
-		"$oid": "5d931c94e17e1d1f9cca811c"
+		"$oid": "5d9556e8f6786405c88058b2"
 	},
 	"medicine": [
 		{
 			"_id": {
-				"$oid": "5d931ba795792f2c74c8be42"
+				"$oid": "5d93a93e5471b206a8687cde"
 			},
-			"text": "sample product - ₱ 111",
-			"price": 2553,
-			"quantity": 23
+			"text": "Dental Composite - ₱ 100",
+			"price": 200,
+			"quantity": 2
 		}
 	],
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d956b8a99694f17bc1cd40d"
+	},
+	"service": [
+		{
+			"$oid": "5d939cd81940d12f4470c618"
+		}
+	],
+	"date": {
+		"$date": "2019-10-03T03:24:57.935Z"
+	},
+	"paid": true,
+	"schedule": {
+		"$oid": "5d956a4999694f17bc1cd405"
+	},
+	"month": 9,
+	"day": 16,
+	"year": 2019,
+	"ampm": "10-00-AM",
+	"medicine_total": 800,
+	"service_total": 3500,
+	"grand_total": 4300,
+	"patient": {
+		"$oid": "5d955784f6786405c88058b4"
+	},
+	"medicine": [
+		{
+			"_id": {
+				"$oid": "5d93a9985471b206a8687ce3"
+			},
+			"text": "Anesthesia - ₱ 400",
+			"price": 800,
+			"quantity": 2
+		}
+	],
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d956b9599694f17bc1cd40e"
+	},
+	"service": [
+		{
+			"$oid": "5d939cd81940d12f4470c618"
+		}
+	],
+	"date": {
+		"$date": "2019-10-03T03:24:57.935Z"
+	},
+	"paid": true,
+	"schedule": {
+		"$oid": "5d956aae99694f17bc1cd407"
+	},
+	"month": 7,
+	"day": 9,
+	"year": 2019,
+	"ampm": "3-45-PM",
+	"medicine_total": null,
+	"service_total": 3500,
+	"grand_total": 3500,
+	"patient": {
+		"$oid": "5d95583af6786405c88058b6"
+	},
+	"medicine": [],
 	"__v": 0
 }]
 

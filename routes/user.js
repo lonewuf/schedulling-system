@@ -38,25 +38,13 @@ router.post('/login', (req, res, next) => {
   
 });
 
-router.get('/register',  (req, res) => {
-
-  res.render('register', {
-      title: 'Register'
-  });
-
-});
-
 // Register admin
-router.post('/register', (req, res) => {
+router.post('/register', auth.isUser,(req, res) => {
  
   var name = req.body.name;
   var username = req.body.username;
   var password = req.body.password;
   var password2 = req.body.password2;
-
-  console.log(`${name} ${username} ${password} ${password2}  =====`)
-  console.log(`${name == ''} ${username == ''} ${password} ${password2}  =====`)
-
 
   if(name == '' || username == '' || password == '' || password2 == '') {
     req.flash('danger', 'All Field is required')
@@ -107,7 +95,7 @@ router.post('/register', (req, res) => {
 });
 
 // Shows admin list
-router.get('/admin-list', (req, res) => {
+router.get('/admin-list', auth.isUser, (req, res) => {
   User.find({})
     .then(users => {
       res.render('admin-list', {
@@ -118,7 +106,7 @@ router.get('/admin-list', (req, res) => {
 })
 
 // Update admin based on id
-router.post('/update-admin/:id', (req, res) => {
+router.post('/update-admin/:id', auth.isUser, (req, res) => {
   const id = req.params.id
   const name = req.body.name;
   const username = req.body.username;
@@ -167,7 +155,7 @@ router.post('/update-admin/:id', (req, res) => {
 })
 
 // Deletes admin based on id
-router.get('/delete-admin/:id', (req, res) => {
+router.get('/delete-admin/:id', auth.isUser, (req, res) => {
   const id = req.params.id
 
   User.findById(id)
@@ -186,7 +174,8 @@ router.get('/delete-admin/:id', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.get('/logout', function (req, res) {
+// Logout user
+router.get('/logout', auth.isUser, function (req, res) {
 
   req.logout();
   req.flash('success', 'You are logged out!');

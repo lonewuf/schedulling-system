@@ -74,7 +74,7 @@ app.use('/payment', paymentRoutes);
 app.use('/', userRoutes)
 
 app.get('*', function(req, res){
-  res.status(404).send(req.url);
+  res.status(404).render('error');
 });
 
 // Server Host

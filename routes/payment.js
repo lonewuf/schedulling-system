@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const auth = require('../config/auth'); 
 
 // Import models
 const Patient = require('../models/patient')
@@ -8,8 +9,10 @@ const Service = require('../models/service')
 const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
-router.get('/', (req, res) => { 
+// Show page of payment list
+router.get('/', auth.isUser, (req, res) => { 
   Payment.find({}) 
+    .sort({month: -1, day: -1})
     .populate('schedule')
     .populate('patient')
     .then(payments => { 
@@ -17,8 +20,9 @@ router.get('/', (req, res) => {
     })
     .catch()
 })  
- 
-router.get('/search-by-payment/:id', (req, res) => {
+
+// Show the page of payment
+router.get('/search-by-payment/:id', auth.isUser, (req, res) => {
   const id = req.params.id
 
   Payment.findById(id)
@@ -29,7 +33,7 @@ router.get('/search-by-payment/:id', (req, res) => {
           Schedule.findById(payment.schedule)
             .populate('service')
             .then(schedule => {
-              console.log(schedule)
+              // Render the page of payment
               res.render('payment', {payment, patient, schedule})
             })
             .catch(err => console.log(err))
@@ -39,7 +43,8 @@ router.get('/search-by-payment/:id', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.get('/search-by-schedule/:id', (req, res) => {
+// Show the page of payment
+router.get('/search-by-schedule/:id', auth.isUser, (req, res) => {
   const id = req.params.id
 
   Payment.findOne({schedule: id})
@@ -50,7 +55,7 @@ router.get('/search-by-schedule/:id', (req, res) => {
           Schedule.findById(payment.schedule)
             .populate('service')
             .then(schedule => {
-              console.log(schedule)
+              // Render the page of payment
               res.render('payment', {payment, patient, schedule})
             })
             .catch(err => console.log(err))
@@ -61,30 +66,25 @@ router.get('/search-by-schedule/:id', (req, res) => {
   
 })
 
-router.post('/add-payment', (req, res) => {
+// Add Payment
+router.post('/add-payment', auth.isUser, (req, res) => {
   const data = req.body
   var filteredService = []
   var filteredMedicines = []
   var testQ = false;
-  console.log(data.medicines)
   data.medicines.forEach(med => {
     Inventory.findById(med._id)
       .then(foundMed => {
-        console.log(foundMed.quantity + " <" +  med.quantity)
-        console.log(foundMed.quantity < med.quantity)
         if(foundMed.quantity < med.quantity) {
           testQ = true
         }
       })
   }) 
 
-  console.log(testQ, "testq before")
   if(testQ) {
-    console.log('1111111111')
     req.flash('danger', `The quantity of ${foundMed} is not enough`)
     res.redirect('/schedule');
   } else {
-    console.log('22222222')
 
     data.serviceSimple.forEach(serv => {
       if(serv != 'none') {
@@ -114,30 +114,34 @@ router.post('/add-payment', (req, res) => {
         }
       )
       .then(updatedSchedule => {
-        Payment.create(
-          {
-            schedule: data.schedID,
-            month: data.month,
-            day: data.day,
-            year: data.year,
-            ampm: data.ampm,
-            medicine_total: data.mTotal,
-            service_total: data.sTotal,
-            grand_total: data.gTotal,
-            paid: true,
-            patient: data.patientID,
-            medicine: filteredMedicines,
-            service: filteredService
-          }
-        )
-        .then(createdPayment => {
-          Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: false}})
-            .then(updatedPatient => {
-              console.log(testQ, "testq after")
-
-              console.log('updated')
+        Schedule.findById(data.schedID)
+          .then(sched => {
+            Payment.create(
+              {
+                schedule: data.schedID, 
+                month: sched.month,
+                day: sched.day, 
+                year: sched.year,
+                ampm: data.ampm,
+                medicine_total: data.mTotal,
+                service_total: data.sTotal,
+                grand_total: data.gTotal,
+                paid: true,
+                patient: data.patientID,
+                medicine: filteredMedicines,
+                service: filteredService
+              }
+            )
+            .then(createdPayment => {
+              Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: false}})
+                .then(updatedPatient => {
+    
+                  console.log('updated')
+                })
             })
-        })
+          })
+          .catch(err => console.log(err))
+       
       })
   }
 })

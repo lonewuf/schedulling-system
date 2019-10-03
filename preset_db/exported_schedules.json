@@ -1,129 +1,176 @@
 [{
 	"_id": {
-		"$oid": "5d93015fced15b27f48e4862"
+		"$oid": "5d956a4999694f17bc1cd405"
 	},
 	"resched": {
 		"is_resched": false
 	},
 	"service": [
 		{
-			"$oid": "5d93012cced15b27f48e4861"
+			"$oid": "5d939cd81940d12f4470c618"
 		}
 	],
 	"serviceSimple": [],
 	"date": {
-		"$date": "2019-10-01T07:32:37.261Z"
-	},
-	"cancelled": true,
-	"paid": false,
-	"done": false,
-	"patient": {
-		"$oid": "5d92f97d11e2c405f023aa42"
-	},
-	"month": 10,
-	"year": 2019,
-	"day": 1,
-	"ampm": "10-15-AM",
-	"medicine": [],
-	"__v": 0
-},
-{
-	"_id": {
-		"$oid": "5d931c402eee8e1e58aafbfa"
-	},
-	"resched": {
-		"is_resched": false
-	},
-	"service": [
-		{
-			"$oid": "5d93012cced15b27f48e4861"
-		}
-	],
-	"serviceSimple": [],
-	"date": {
-		"$date": "2019-10-01T09:27:55.045Z"
-	},
-	"cancelled": false,
-	"paid": false,
-	"done": false,
-	"patient": {
-		"$oid": "5d931c402eee8e1e58aafbf9"
-	},
-	"month": 10,
-	"year": 2019,
-	"day": 10,
-	"ampm": "12-15-PM",
-	"medicine": [],
-	"__v": 0
-},
-{
-	"_id": {
-		"$oid": "5d931c7ee17e1d1f9cca811a"
-	},
-	"resched": {
-		"is_resched": false
-	},
-	"service": [
-		{
-			"$oid": "5d93012cced15b27f48e4861"
-		}
-	],
-	"serviceSimple": [],
-	"date": {
-		"$date": "2019-10-01T09:28:57.417Z"
-	},
-	"cancelled": false,
-	"paid": false,
-	"done": false,
-	"patient": {
-		"$oid": "5d931c7ee17e1d1f9cca8119"
-	},
-	"month": 10,
-	"year": 2019,
-	"day": 4,
-	"ampm": "11-45-AM",
-	"medicine": [],
-	"__v": 0
-},
-{
-	"_id": {
-		"$oid": "5d931c94e17e1d1f9cca811d"
-	},
-	"resched": {
-		"is_resched": false
-	},
-	"service": [
-		{
-			"$oid": "5d93012cced15b27f48e4861"
-		}
-	],
-	"serviceSimple": [],
-	"date": {
-		"$date": "2019-10-01T09:28:57.417Z"
+		"$date": "2019-10-03T03:24:57.876Z"
 	},
 	"cancelled": false,
 	"paid": true,
 	"done": true,
 	"patient": {
-		"$oid": "5d931c94e17e1d1f9cca811c"
+		"$oid": "5d955784f6786405c88058b4"
 	},
-	"month": 10,
+	"month": 9,
 	"year": 2019,
-	"day": 5,
-	"ampm": "12-00-PM",
+	"day": 16,
+	"ampm": "10-00-AM",
 	"medicine": [
 		{
 			"_id": {
-				"$oid": "5d931ba795792f2c74c8be42"
+				"$oid": "5d93a9985471b206a8687ce3"
 			},
-			"text": "sample product - ₱ 111",
-			"price": 2553,
-			"quantity": 23
+			"text": "Anesthesia - ₱ 400",
+			"price": 800,
+			"quantity": 2
 		}
 	],
 	"__v": 0,
-	"grand_total": 3053,
-	"medicine_total": 2553,
-	"service_total": 500
+	"grand_total": 4300,
+	"medicine_total": 800,
+	"service_total": 3500
+},
+{
+	"_id": {
+		"$oid": "5d956a9a99694f17bc1cd406"
+	},
+	"resched": {
+		"is_resched": false
+	},
+	"service": [
+		{
+			"$oid": "5d939c371940d12f4470c613"
+		}
+	],
+	"serviceSimple": [],
+	"date": {
+		"$date": "2019-10-03T03:24:57.876Z"
+	},
+	"cancelled": false,
+	"paid": false,
+	"done": false,
+	"patient": {
+		"$oid": "5d955911f6786405c88058bc"
+	},
+	"month": 10,
+	"year": 2019,
+	"day": 18,
+	"ampm": "11-00-AM",
+	"medicine": [],
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d956aae99694f17bc1cd407"
+	},
+	"resched": {
+		"is_resched": false
+	},
+	"service": [
+		{
+			"$oid": "5d939cd81940d12f4470c618"
+		}
+	],
+	"serviceSimple": [],
+	"date": {
+		"$date": "2019-10-03T03:24:57.876Z"
+	},
+	"cancelled": false,
+	"paid": true,
+	"done": true,
+	"patient": {
+		"$oid": "5d95583af6786405c88058b6"
+	},
+	"month": 7,
+	"year": 2019,
+	"day": 9,
+	"ampm": "3-45-PM",
+	"medicine": [],
+	"__v": 0,
+	"grand_total": 3500,
+	"medicine_total": null,
+	"service_total": 3500
+},
+{
+	"_id": {
+		"$oid": "5d956ae999694f17bc1cd40a"
+	},
+	"resched": {
+		"is_resched": false
+	},
+	"service": [
+		{
+			"$oid": "5d939cc41940d12f4470c616"
+		}
+	],
+	"serviceSimple": [],
+	"date": {
+		"$date": "2019-10-03T03:24:57.876Z"
+	},
+	"cancelled": true,
+	"paid": false,
+	"done": false,
+	"patient": {
+		"$oid": "5d956ae999694f17bc1cd409"
+	},
+	"month": 10,
+	"year": 2019,
+	"day": 1,
+	"ampm": "9-00-AM",
+	"medicine": [],
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5d956b0b99694f17bc1cd40b"
+	},
+	"resched": {
+		"is_resched": false
+	},
+	"service": [
+		{
+			"$oid": "5d939cd81940d12f4470c618"
+		},
+		{
+			"$oid": "5d939d211940d12f4470c61c"
+		}
+	],
+	"serviceSimple": [],
+	"date": {
+		"$date": "2019-10-03T03:24:57.876Z"
+	},
+	"cancelled": false,
+	"paid": true,
+	"done": true,
+	"patient": {
+		"$oid": "5d9556e8f6786405c88058b2"
+	},
+	"month": 10,
+	"year": 2019,
+	"day": 2,
+	"ampm": "9-30-AM",
+	"medicine": [
+		{
+			"_id": {
+				"$oid": "5d93a93e5471b206a8687cde"
+			},
+			"text": "Dental Composite - ₱ 100",
+			"price": 200,
+			"quantity": 2
+		}
+	],
+	"__v": 0,
+	"grand_total": 8700,
+	"medicine_total": 200,
+	"service_total": 8500
 }]
 

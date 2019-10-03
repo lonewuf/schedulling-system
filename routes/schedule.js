@@ -10,69 +10,17 @@ const Inventory = require('../models/inventory')
 
 // Render the schedule page
 // Get /schedule
-router.get('/', (req, res) => {
+router.get('/', auth.isUser, (req, res) => {
   res.render('schedule')
 }) 
 
 // Load all the data needed in schedule page
 // Get /schedule/initial-load
-router.get('/initial-load', (req, res) => { 
+router.get('/initial-load', auth.isUser, (req, res) => { 
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
   var allData = {}
-
-  // Schedule.find({}) 
-  //   .populate('patient')
-  //   .populate('service')
-  //   .then(scheduleData => {
-  //     Patient.find({})
-  //       .populate('teeth')
-  //       .then(patientData => {
-  //         Service.find({})
-  //           .then(serviceData => {
-  //             Inventory.find({is_med:'yes'})
-  //              .then(inventoryData => {
-                 
-  //                 allData.scheduleData = scheduleData;
-  //                 allData.patientData = patientData;
-  //                 allData.serviceData = serviceData;
-  //                 allData.inventoryData = inventoryData;
-  //                 res.send(allData);
-  //              })
-  //              .catch(err => console.log(err))
-  //           })
-  //           .catch(err => console.log(err))
-  //       })
-      
-  //   })
-  //   .catch(err => console.log(err))
-
-  // const tryThis = async () => {
-  //   try {
-  //     await Schedule.find({done: false})
-  //       .populate('patient')
-  //       .populate('service')
-  //       .then(scheduleData => { 
-  //         allData.scheduleData = scheduleData;
-  //       })
-  //     await Patient.find({})
-  //       .populate('teeth')
-  //       .then(patientData => {  
-  //         allData.patientData = patientData;
-  //       })
-  //     await Service.find({})
-  //       .then(serviceData => { 
-  //         allData.serviceData = serviceData;
-  //       })
-  //   } catch(err) {
-  //     console.log(err)
-  //   }
-    
-  // }
-  // tryThis()
-
-  // res.send(allData)
 
   const tryThis = async () => {
 
@@ -121,11 +69,9 @@ router.get('/initial-load', (req, res) => {
 
 // Route for creating patient with schedule
 // POST /schedule/add-schedule-with-patient
-router.post('/add-schedule-with-patient', (req, res) => {
+router.post('/add-schedule-with-patient', auth.isUser, (req, res) => {
   const data = req.body
-  console.log(data.serviceSimple)
   var sample = data.serviceSimple
-  console.log(sample, "sample")
   // Craete teeth document in database
   Teeth.create({
     t_11: data.t_11,
@@ -239,7 +185,7 @@ router.post('/add-schedule-with-patient', (req, res) => {
 })
 
 // Add schedule to patient
-router.post('/add-schedule', (req, res) => {
+router.post('/add-schedule', auth.isUser, (req, res) => {
   const data = req.body
 
   // Create schedule
@@ -259,7 +205,6 @@ router.post('/add-schedule', (req, res) => {
         // Update patient to be scheduled
         Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: true}})
           .then(scheduledPatient => {
-            console.log(scheduledPatient)
           })
           .catch(err => console.log(err))
       }
@@ -268,10 +213,9 @@ router.post('/add-schedule', (req, res) => {
 
 })
 
-// updating schedule
-router.post('/edit-schedule', (req, res) => {
+// Updating schedule
+router.post('/edit-schedule', auth.isUser, (req, res) => {
   const data = req.body
-  console.log(data)
   Schedule.updateOne({_id: data.schedID}, 
       {
         month: data.month,
@@ -286,7 +230,8 @@ router.post('/edit-schedule', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.post('/cancel-schedule', (req, res) => {
+// Cancel Schedule
+router.post('/cancel-schedule', auth.isUser, (req, res) => {
   const data = req.body;
   console.log(data)
 
@@ -305,17 +250,6 @@ router.post('/cancel-schedule', (req, res) => {
     .catch(err => console.log(err))
 })
 
-router.get('/get-schedule-day/:year/:month/:day', (req, res) => {
-  const year = req.params.year;
-  const month = req.params.month;
-  const day = req.params.day;
-  Schedule.find({year, month, day})
-    .populate('patient')
-    .then(scheduleData => {
-      res.send(scheduleData)
-    })
-    .catch(err => console.log(err))
-})
 
 
 
