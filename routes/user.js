@@ -34,7 +34,7 @@ router.post('/login', (req, res, next) => {
       successRedirect: '/',
       failureRedirect: '/login',
       failureFlash: true
-  })(req, res, next);
+  })(req, res, next); 
   
 });
 
