@@ -15,7 +15,7 @@ const auth = require('./config/auth');
 
 // Setup Database
 const myDb = require('./config/database');
-mongoose.connect(myDb.databaseDev, { useNewUrlParser: true,  useUnifiedTopology: true});
+mongoose.connect(myDb.databaseProd, { useNewUrlParser: true,  useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'Connection error: '))
   .once('open', () => console.log('Connected to MongoDB'))

@@ -11,6 +11,7 @@ const User = require('../models/users')
 // Shows home page 
 router.get('/', auth.isUser, (req, res) => {
   res.render('index', {
+    user: req.user,
     title: 'L.A. TAN Dental Clinic'
   });
 })
@@ -39,7 +40,7 @@ router.post('/login', (req, res, next) => {
 });
 
 // Register admin
-router.post('/register', auth.isUser,(req, res) => {
+router.post('/register', (req, res) => {
  
   var name = req.body.name;
   var username = req.body.username;
