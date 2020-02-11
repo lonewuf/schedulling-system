@@ -67,7 +67,7 @@ router.get('/search-by-schedule/:id', auth.isUser, (req, res) => {
 })
 
 // Add Payment
-router.post('/add-payment', auth.isUser, (req, res) => {
+router.post('/add-payment', auth.isUser, async (req, res) => {
   const data = req.body
   var filteredService = []
   var filteredMedicines = []
