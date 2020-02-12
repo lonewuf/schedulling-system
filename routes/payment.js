@@ -13,7 +13,7 @@ const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
 // HOST
-const host = require('../config/utils').hostDev;
+const host = require('../config/utils').hostProd;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                 'September', 'October', 'November', 'December']

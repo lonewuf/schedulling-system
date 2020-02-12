@@ -1,8 +1,8 @@
 // Dev host
-const host = 'http://localhost:3000';
+// const host = 'http://localhost:3000';
 
 // Showcase Host
-// const host = 'https://la-dental-clinic.herokuapp.com'
+const host = 'https://la-dental-clinic.herokuapp.com'
 
 // Global Variables
 const numOfHours = 1
