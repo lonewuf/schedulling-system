@@ -31,7 +31,8 @@
                     <a class="nav-link" href="/patient">Patient List</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hi, <%= user.name %></a>
+                    <% var currentUserName = user.name ? user.name : '' %>
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hi, <%= currentUserName %></a>
                     <div class="dropdown-menu">
                     <a href="#" data-toggle="modal" data-target="#registerModal" class="dropdown-item">Register New Admin</a>
                     <!-- <a href="/admin-list" class="dropdown-item">Admin List</a> -->

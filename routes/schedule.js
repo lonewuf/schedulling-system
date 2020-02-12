@@ -11,8 +11,8 @@ const Inventory = require('../models/inventory')
 // Render the schedule page
 // Get /schedule
 router.get('/', auth.isUser, (req, res) => {
-  res.render('schedule')
-}) 
+  res.render('schedule', {user: req.user});
+});
 
 // Load all the data needed in schedule page
 // Get /schedule/initial-load
@@ -69,7 +69,7 @@ router.get('/initial-load', auth.isUser, (req, res) => {
 
 // Route for creating patient with schedule
 // POST /schedule/add-schedule-with-patient
-router.post('/add-schedule-with-patient', auth.isUser, (req, res) => {
+router.post('/add-schedule-with-patient', auth.isUser, async (req, res) => {
   const data = req.body
   var sample = data.serviceSimple
   // Craete teeth document in database
@@ -152,7 +152,7 @@ router.post('/add-schedule-with-patient', auth.isUser, (req, res) => {
       if(err) {
         throw err
       } else {
-
+ 
         // Create Schedule document in database
         Schedule.create(
           {
@@ -164,10 +164,14 @@ router.post('/add-schedule-with-patient', auth.isUser, (req, res) => {
             ampm: data.ampm,
             service: data.serviceSimple
           },
-          (err, createdSchedule) => {
+          async (err, createdSchedule) => {
             if(err) {
               throw (err)
             } else {
+              // console.log(createdSchedule, "----");
+              const showCreatedSchedule = await Schedule.findById(createdSchedule._id).populate('patient').populate('service');
+              console.log(showCreatedSchedule); 
+
               createdPatient.schedules.push(createdSchedule._id)
               createdPatient.save()
                 .then(updatedPatient => {

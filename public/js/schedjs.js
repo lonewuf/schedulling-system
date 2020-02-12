@@ -1,8 +1,8 @@
 // Dev host
-// const host = 'http://localhost:3000';
+const host = 'http://localhost:3000';
 
 // Showcase Host
-const host = 'https://la-dental-clinic.herokuapp.com'
+// const host = 'https://la-dental-clinic.herokuapp.com'
 
 // Global Variables
 const numOfHours = 1
@@ -63,18 +63,21 @@ $(document).ready(function(){
   },1000);
   setTimeout(function(){
     $(".left-button").click();
-  },2000);
+  },4000);
 
   // Check and show all events
   var events = check_events(today, date.getMonth()+1, date.getFullYear());
   show_events(events, months[date.getMonth()], today);
+  
+  
 });
 
 
 //------------------------------------------------------
 // Get all data needed and load it in "schedule_data"   |
 //------------------------------------------------------
-function init_events() {
+
+function  init_events() {
   $.ajax({
     url: `${host}/schedule/initial-load`, 
     type: "GET",
