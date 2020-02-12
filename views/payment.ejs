@@ -31,6 +31,7 @@
         <p>Medicine Total: &#8369; <%= payment.medicine_total %></p>
       <% } %>
       <p class="font-weight-bold">Total of payment: &#8369; <%= payment.grand_total %></p>
+      <a href="/payment/show-invoice/<%= payment._id %>" target="_blank" class="btn btn-primary mb-2">Check Reciept</a>
     </div>
 
 <% include ./partials/footer %>

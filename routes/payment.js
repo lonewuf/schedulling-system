@@ -13,7 +13,7 @@ const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
 // HOST
-const host = require('../config/utils').hostProd;
+const host = require('../config/utils').hostDev;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                 'September', 'October', 'November', 'December']
@@ -32,29 +32,38 @@ router.get('/', auth.isUser, (req, res) => {
 
 
 // Show the page of payment
-router.get('/search-by-payment/:id', auth.isUser, (req, res) => {
+router.get('/search-by-payment/:id', auth.isUser, async (req, res) => {
   const id = req.params.id
 
-  Payment.findById(id)
-    .populate('schedule')
-    .then(payment => {
-      Patient.findById(payment.patient)
-        .then(patient => {
-          Schedule.findById(payment.schedule)
-            .populate('service')
-            .then(schedule => {
-              // Render the page of payment
-              res.render('payment', {payment, patient, schedule})
-            })
-            .catch(err => console.log(err))
-        })
-        .catch(err => console.log(err))
-    })
-    .catch(err => console.log(err))
+  try {
+    const payment = await Payment.findById(id).populate('schedule');
+    const patient = await Patient.findById(payment.patient);
+    const schedule = await Schedule.findById(payment.schedule).populate('service');
+    res.render('payment', {payment, patient, schedule})
+  } catch(err) {
+    console.log(err)
+  }
+
+  // Payment.findById(id)
+  //   .populate('schedule')
+  //   .then(payment => {
+  //     Patient.findById(payment.patient)
+  //       .then(patient => {
+  //         Schedule.findById(payment.schedule)
+  //           .populate('service')
+  //           .then(schedule => {
+  //             // Render the page of payment
+              
+  //           })
+  //           .catch(err => console.log(err))
+  //       })
+  //       .catch(err => console.log(err))
+  //   })
+  //   .catch(err => console.log(err))
 })
 
 // Show the page of payment
-router.get('/search-by-schedule/:id', auth.isUser, (req, res) => {
+router.get('/search-by-schedule/:id', auth.isUser, async (req, res) => {
   const id = req.params.id
 
   Payment.findOne({schedule: id})
@@ -225,9 +234,7 @@ router.post('/add-payment', auth.isUser, async (req, res) => {
       )
       const updatedPatient = await Patient.updateOne({_id: data.patientID}, {$set: {is_scheduled: false}})
       
-      open(`${host}/payment/show-invoice/${createdPayment._id}`)
-        .then(() => console.log("Success"))
-        .catch(err => console.log(err));
+      res.redirect(`/payment/search-by-payment/${createdPayment._id}`)
 
     } catch(err) {
       console.log(err);
@@ -291,8 +298,8 @@ router.get('/show-invoice/:id', async(req, res) => {
   
   console.log(payment) 
  
-  var invoiceItems = []
-      
+  var invoiceItems = [] 
+       
   payment.service.forEach(product => {
     invoiceItems.push({
       name: product.name,
