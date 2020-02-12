@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const fs = require('fs');
+const fs = require('fs'); 
 const https = require('https');
 const auth = require('../config/auth'); 
 const open = require('open');
@@ -13,7 +13,7 @@ const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
 // HOST
-const host = require('../config/utils').hostProd;
+const host = require('../config/utils').hostDev;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                 'September', 'October', 'November', 'December']
