@@ -1,8 +1,8 @@
 // Dev host
-const host = 'http://localhost:3000';
+// const host = 'http://localhost:3000';
 
 // Showcase Host
-// const host = 'https://la-dental-clinic.herokuapp.com'
+const host = 'https://la-dental-clinic.herokuapp.com'
 
 // Global Variables
 const numOfHours = 1
@@ -60,10 +60,10 @@ $(document).ready(function(){
   // Catch bug for not displaying schedules on load
   setTimeout(function(){
     $(".right-button").click();
-  },1000);
+  },2000);
   setTimeout(function(){
     $(".left-button").click();
-  },4000);
+  },6000);
 
   // Check and show all events
   var events = check_events(today, date.getMonth()+1, date.getFullYear());

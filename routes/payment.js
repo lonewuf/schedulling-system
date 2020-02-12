@@ -13,7 +13,10 @@ const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
 // HOST
-const host = require('../config/utils').hostDev;
+const host = require('../config/utils').hostProd;
+
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+                'September', 'October', 'November', 'December']
 
 // Show page of payment list
 router.get('/', auth.isUser, (req, res) => { 
@@ -296,7 +299,7 @@ router.get('/show-invoice/:id', async(req, res) => {
       quantity: 1,
       unit_cost: parseFloat(product.price).toFixed(2)
     })
-  }) 
+  })  
 
   payment.medicine.forEach(product => {
     invoiceItems.push({
@@ -312,9 +315,10 @@ router.get('/show-invoice/:id', async(req, res) => {
     header: "L.A. Dental Clinic",
     logo: null,
     from: null,
+    number: payment._id,
+    date: `${months[parseInt(payment.month) - 1]} ${payment.day}, ${payment.year}`,
     to: payment.patient.name,
     currency: "php",
-    number: null,
     payment_terms: 'Cash - Paid',
     items: invoiceItems, 
     shipping: null,  
@@ -325,15 +329,15 @@ router.get('/show-invoice/:id', async(req, res) => {
 
   };
  
-  const fileName = `${payment.patient.name}-${payment.month}/${payment.day}/${payment.year}`
+  const fileName = `${payment.patient.name} ${payment.month}-${payment.day}-${payment.year}`
 
   try { 
     console.log("aa")
-    const generatePDF = await generateInvoice(invoice, __dirname + `/files/invoice.pdf`);
+    const generatePDF = await generateInvoice(invoice, __dirname + `/files/${fileName}.pdf`);
     console.log("bb")
     setTimeout(() => {
       console.log("cc")      
-      fs.readFile(__dirname + `/files/invoice.pdf` , function (err,data){
+      fs.readFile(__dirname + `/files/${fileName}.pdf` , function (err,data){
         res.contentType("application/pdf");
         res.send(data);
       })
