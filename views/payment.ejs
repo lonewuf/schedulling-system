@@ -6,7 +6,7 @@
       <p>Age: <%= patient.age %></p>
       <p>Contact Number: <%= patient.contact_number %></p>
       <p>Time: <%= patient.ampm %></p>
-      <p>Date: <%= months[payment.month] %> <%= payment.day %> <%= payment.year %></p>
+      <p>Date: <%= months[parseInt(payment.month) - 1] %> <%= payment.day %> <%= payment.year %></p>
       <p>Services: </p>
       <ul> 
       <% schedule.service.forEach(serv => { %>

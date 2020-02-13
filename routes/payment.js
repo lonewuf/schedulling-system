@@ -13,7 +13,7 @@ const Inventory = require('../models/inventory')
 const Payment = require('../models/payment') 
 
 // HOST
-const host = require('../config/utils').hostDev;
+const host = require('../config/utils').hostProd;
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                 'September', 'October', 'November', 'December']
@@ -343,12 +343,14 @@ router.get('/show-invoice/:id', async(req, res) => {
     const generatePDF = await generateInvoice(invoice, __dirname + `/files/${fileName}.pdf`);
     console.log("bb")
     setTimeout(() => {
-      console.log("cc")      
-      fs.readFile(__dirname + `/files/${fileName}.pdf` , function (err,data){
-        res.contentType("application/pdf");
-        res.send(data);
-      })
-    }, 15000)  
+      console.log("cc")   
+      const file = `${__dirname}/files/${fileName}.pdf`;
+      res.download(file); // Set disposition and send it.   
+      // fs.readFile(__dirname + `/files/${fileName}.pdf` , function (err,data){
+      //   res.contentType("application/pdf");
+      //   res.send(data);
+      // })
+    }, 10000)  
   } catch(err) {
     console.log(err);
   }
