@@ -8,14 +8,14 @@ const express           = require('express'),
       fileUpload        = require('express-fileupload'),
       passport          = require('passport')
       ;
- 
+  
 const app = express();
-
+ 
 const auth = require('./config/auth');
 
 // Setup Database
 const myDb = require('./config/database');
-mongoose.connect(myDb.databaseProd, { useNewUrlParser: true,  useUnifiedTopology: true});
+mongoose.connect(myDb.databaseDev, { useNewUrlParser: true,  useUnifiedTopology: true});
 mongoose.connection
   .on('error', console.error.bind(console, 'Connection error: '))
   .once('open', () => console.log('Connected to MongoDB'))

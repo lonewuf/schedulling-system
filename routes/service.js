@@ -7,7 +7,7 @@ const Schedule = require('../models/schedule')
 const Teeth = require('../models/teeth')
 const Service = require('../models/service')
 const r = /^\d+(\.\d{1,2})?$/
-
+ 
 // Show page of services
 router.get('/', auth.isUser, (req, res) => {
 

@@ -1,8 +1,8 @@
 // Dev host
-// const host = 'http://localhost:3000';
+const host = 'http://localhost:3000';
 
 // Showcase Host 
-const host = 'https://la-dental-clinic.herokuapp.com'
+// const host = 'https://la-dental-clinic.herokuapp.com'
 
 // Global Variables
 const numOfHours = 1
@@ -1546,7 +1546,7 @@ function new_patient_with_schedule(event) {
   $("#dialog-2").hide(250);
   $("#dialog").hide(250);
   $("#dialog").show(400);
-  $("#flexible-text").text("Register and Schedule Patient")
+  $("#flexible-text").text("Add Schedule")
   
   // Event handler for cancel button
   $("#cancel-button").click(function() {

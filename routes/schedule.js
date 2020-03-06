@@ -10,13 +10,13 @@ const Inventory = require('../models/inventory')
 
 // Render the schedule page
 // Get /schedule
-router.get('/', auth.isUser, (req, res) => {
+router.get('/', /*auth.isUser,*/ (req, res) => {
   res.render('schedule', {user: req.user});
 });
 
 // Load all the data needed in schedule page
 // Get /schedule/initial-load
-router.get('/initial-load', auth.isUser, (req, res) => { 
+router.get('/initial-load', /*auth.isUser,*/ (req, res) => { 
   const date = new Date();
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
@@ -189,7 +189,7 @@ router.post('/add-schedule-with-patient', auth.isUser, async (req, res) => {
 })
 
 // Add schedule to patient
-router.post('/add-schedule', auth.isUser, (req, res) => {
+router.post('/add-schedule', /*auth.isUser,*/ (req, res) => {
   const data = req.body
 
   // Create schedule
@@ -218,7 +218,7 @@ router.post('/add-schedule', auth.isUser, (req, res) => {
 })
 
 // Updating schedule
-router.post('/edit-schedule', auth.isUser, (req, res) => {
+router.post('/edit-schedule', /*auth.isUser,*/ (req, res) => {
   const data = req.body
   Schedule.updateOne({_id: data.schedID}, 
       {
@@ -235,7 +235,7 @@ router.post('/edit-schedule', auth.isUser, (req, res) => {
 })
 
 // Cancel Schedule
-router.post('/cancel-schedule', auth.isUser, (req, res) => {
+router.post('/cancel-schedule', /*auth.isUser,*/ (req, res) => {
   const data = req.body;
   console.log(data)
 

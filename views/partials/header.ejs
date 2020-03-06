@@ -10,36 +10,40 @@
   <body>
   <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-4">
       <div class="container"> 
-        <a class="navbar-brand" href="/">L.A. TAN Dental Clinic</a>
+        <a class="navbar-brand" href="/">Schedulling System</a>
             <ul class="navbar-nav">
+                <%if(user) {%>
+                    <li class="nav-item dropdown">
+                        <% var currentUserName = user.name ? user.name : '' %>
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hi, <%= currentUserName %></a>
+                        <div class="dropdown-menu">
+                        <a href="#" data-toggle="modal" data-target="#registerModal" class="dropdown-item">Register New Admin</a>
+                        <!-- <a href="/admin-list" class="dropdown-item">Admin List</a> -->
+                        <a href="/admin-list" class="dropdown-item">Admin List</a>
+                        <a href="/logout" class="dropdown-item">Logout</a>
+                        </div>
+                    </li>
+                <% } else {%>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/schedule">Schedule</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/services">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/inventory">Inventory</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/payment">Payments</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/patient">Patient List</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <% var currentUserName = user.name ? user.name : '' %>
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hi, <%= currentUserName %></a>
-                    <div class="dropdown-menu">
-                    <a href="#" data-toggle="modal" data-target="#registerModal" class="dropdown-item">Register New Admin</a>
-                    <!-- <a href="/admin-list" class="dropdown-item">Admin List</a> -->
-                    <a href="/admin-list" class="dropdown-item">Admin List</a>
-                    <a href="/logout" class="dropdown-item">Logout</a>
-                    </div>
-                </li>
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <!-- <li class="nav-item"> 
+                        <a class="nav-link" href="/schedule">Schedule</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/services">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/inventory">Inventory</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/payment">Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/patient">Patient List</a>
+                    </li> -->
+                <% } %>
             </ul>
         </div>
   </nav>

@@ -9,7 +9,7 @@ const auth = require('../config/auth');
 const User = require('../models/users')
 
 // Shows home page 
-router.get('/', auth.isUser, (req, res) => {
+router.get('/', (req, res) => {
   res.render('index', {
     user: req.user,
     title: 'L.A. TAN Dental Clinic'
